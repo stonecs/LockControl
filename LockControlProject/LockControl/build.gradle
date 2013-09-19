@@ -1,0 +1,58 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:0.5.+'
+    }
+}
+apply plugin: 'android'
+
+repositories {
+    mavenCentral()
+}
+
+android {
+    compileSdkVersion 17
+    buildToolsVersion "17.0.0"
+
+    defaultConfig {
+        minSdkVersion 9
+        targetSdkVersion 16
+    }
+}
+
+ext.daggerVersion = '1.0.1';
+ext.esperandroVersion = '0.13'
+ext.androidSupportVersion ='13.0.0'
+
+configurations {
+    apt
+}
+
+dependencies {
+
+    apt "com.squareup.dagger:dagger-compiler:${daggerVersion}"
+    compile "com.squareup.dagger:dagger:${daggerVersion}"
+	compile "com.android.support:support-v4:${ext.androidSupportVersion}"
+    apt "de.devland.esperandro:esperandro:${ext.esperandroVersion}"
+    compile "de.devland.esperandro:esperandro-api:${ext.esperandroVersion}"
+}
+
+android.applicationVariants.all { variant ->
+    aptOutput = file("${project.buildDir}/source/apt_generated/${variant.dirName}")
+    println "****************************"
+    println "variant: ${variant.name}"
+    println "manifest:  ${variant.processResources.manifestFile}"
+    println "aptOutput:  ${aptOutput}"
+    println "****************************"
+
+    variant.javaCompile.doFirst {
+        println "*** compile doFirst ${variant.name}"
+        aptOutput.mkdirs()
+        variant.javaCompile.options.compilerArgs += [
+                '-processorpath', configurations.apt.getAsPath(),
+                '-s', aptOutput
+        ]
+    }
+}

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Lock Control</string>
+    <string name="action_settings">Settings</string>
+    <string name="disableTimeSpan">Disable duration</string>
+    <string name="disableTimeUnit">Disable time unit</string>
+    <string name="pref_header_general">General</string>
+    <string name="pref_header_notifications">Notifications</string>
+
+</resources>

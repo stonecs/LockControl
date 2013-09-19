@@ -16,7 +16,7 @@ public class App extends Application {
 	KeyguardManager keyguardManager;
 
 	@Inject
-	LockControlPreferences preferences;
+    LockControlPreferences preferences;
 
 	ObjectGraph objectGraph;
 

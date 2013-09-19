@@ -8,6 +8,9 @@ import android.app.KeyguardManager;
 import android.content.Context;
 import android.net.wifi.WifiManager;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import dagger.Module;
 import dagger.Provides;
 import de.devland.esperandro.Esperandro;
@@ -17,6 +20,7 @@ import de.stonecs.android.lockcontrol.dagger.qualifiers.ForApplication;
 import de.stonecs.android.lockcontrol.preferences.LockControlPreferences;
 import de.stonecs.android.lockcontrol.receivers.UnlockReceiver;
 import de.stonecs.android.lockcontrol.ui.preferences.WifiMultiSelectListPreference;
+import de.stonecs.android.lockcontrol.unlockchain.PrioritizedLockAction;
 
 @Module(library = true, injects = { UnlockReceiver.class, App.class, WifiMultiSelectListPreference.class, HmsPickerActivity.class})
 public class LockControlModule {
@@ -55,5 +59,10 @@ public class LockControlModule {
     @Singleton
     WifiManager provideWifiManager(){
         return (WifiManager) application.getSystemService(Context.WIFI_SERVICE);
+    }
+
+    @Provides
+    List<PrioritizedLockAction> provideLockActions(){
+        return new ArrayList<PrioritizedLockAction>();
     }
 }

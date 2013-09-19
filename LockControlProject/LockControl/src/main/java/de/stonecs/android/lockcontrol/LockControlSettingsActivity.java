@@ -5,6 +5,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import de.stonecs.android.lockcontrol.preferences.LockControlPreferences;
+import de.stonecs.android.lockcontrol.ui.preferences.TimeSelectionPreference;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -66,7 +67,7 @@ public class LockControlSettingsActivity extends PreferenceActivity {
 		// Add 'general' preferences.
 		addPreferencesFromResource(R.xml.pref_general);
 
-		// Add 'notifications' preferences, and a corresponding header.
+        // Add 'notifications' preferences, and a corresponding header.
 		PreferenceCategory fakeHeader = new PreferenceCategory(this);
 		fakeHeader.setTitle(R.string.pref_header_notifications);
 		getPreferenceScreen().addPreference(fakeHeader);
@@ -190,6 +191,7 @@ public class LockControlSettingsActivity extends PreferenceActivity {
 		public void onCreate(Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);
 			addPreferencesFromResource(R.xml.pref_general);
+
 
 			// Bind the summaries of EditText/List/Dialog/Ringtone preferences
 			// to their values. When their values change, their summaries are

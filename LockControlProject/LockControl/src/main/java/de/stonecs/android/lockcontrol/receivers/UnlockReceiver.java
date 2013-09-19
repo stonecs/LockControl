@@ -55,7 +55,7 @@ public class UnlockReceiver extends BroadcastReceiver {
 		PendingIntent reEnablePendingIntent = PendingIntent.getBroadcast(
 				context, REENABLE_KEYGUARD_REQUEST, reEnableIntent,
 				PendingIntent.FLAG_CANCEL_CURRENT);
-		int timeoutMillis = Integer.parseInt(preferences.disableDuration()) * 1000;
+		int timeoutMillis = preferences.disableDuration() * 1000;
 		Calendar calendar = Calendar.getInstance();
 		alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis()
 				+ timeoutMillis, reEnablePendingIntent);

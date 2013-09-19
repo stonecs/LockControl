@@ -26,6 +26,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <activity android:name=".ui.dialogs.HmsPickerActivity"/>
         <receiver android:name=".receivers.UnlockReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.USER_PRESENT"/>

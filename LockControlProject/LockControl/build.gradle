@@ -9,6 +9,9 @@ buildscript {
 apply plugin: 'android'
 
 repositories {
+    maven {
+        url 'https://github.com/Goddchen/mvn-repo/raw/master/'
+    }
     mavenCentral()
 }
 
@@ -25,6 +28,7 @@ android {
 ext.daggerVersion = '1.0.1';
 ext.esperandroVersion = '0.13'
 ext.androidSupportVersion ='13.0.0'
+ext.betterPickersVersion = '1.3.1'
 
 configurations {
     apt
@@ -37,6 +41,7 @@ dependencies {
 	compile "com.android.support:support-v4:${ext.androidSupportVersion}"
     apt "de.devland.esperandro:esperandro:${ext.esperandroVersion}"
     compile "de.devland.esperandro:esperandro-api:${ext.esperandroVersion}"
+    compile "com.doomonafireball.betterpickers:android-betterpickers:${ext.betterPickersVersion}"
 }
 
 android.applicationVariants.all { variant ->

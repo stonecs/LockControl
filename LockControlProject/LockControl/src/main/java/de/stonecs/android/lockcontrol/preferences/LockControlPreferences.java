@@ -9,9 +9,9 @@ import de.devland.esperandro.annotations.SharedPreferences;
 @SharedPreferences
 public interface LockControlPreferences extends SharedPreferenceActions {
 
-	@Default(ofString = "30")
-	String disableDuration();
-	void disableDuration(String duration);
+	@Default(ofInt = 30)
+	int disableDuration();
+	void disableDuration(int duration);
 
     Set<String> configuredNetworks();
     void configuredNetworks(Set<String> networks);

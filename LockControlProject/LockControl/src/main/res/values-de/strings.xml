@@ -2,7 +2,8 @@
 <resources>
 
     <string name="app_name">Lock Control</string>
-    <string name="disableTimeSpan">Dauer der Deaktivierung</string>
+    <string name="disable_time_span_title">Dauer der Deaktivierung</string>
+    <string name="disable_time_span_summary">todo</string>
     <string name="pref_header_general">Allgemein</string>
     <string name="pref_header_notifications">Notifications</string>
     <string name="disable_network_summary">Bildschirmsperre deaktivieren, wenn Verbindung mit einem der Netzwerke hergestellt wurde.</string>

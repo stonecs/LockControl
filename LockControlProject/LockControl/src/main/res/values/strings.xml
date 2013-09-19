@@ -2,10 +2,10 @@
 <resources>
 
     <string name="app_name">Lock Control</string>
-    <string name="action_settings">Settings</string>
     <string name="disableTimeSpan">Disable duration</string>
-    <string name="disableTimeUnit">Disable time unit</string>
     <string name="pref_header_general">General</string>
     <string name="pref_header_notifications">Notifications</string>
+    <string name="disable_network_summary">Disable the lock screen when connected to one of those networks.</string>
+    <string name="disable_network_title">Wireless networks</string>
 
 </resources>

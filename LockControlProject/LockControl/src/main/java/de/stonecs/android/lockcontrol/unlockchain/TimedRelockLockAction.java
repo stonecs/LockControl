@@ -55,7 +55,6 @@ public class TimedRelockLockAction implements PrioritizedLockAction {
         Calendar calendar = Calendar.getInstance();
         alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis() + timeoutMillis, reLockPendingIntent);
 
-
         return false;
     }
 

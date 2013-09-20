@@ -1,7 +1,9 @@
 package de.stonecs.android.lockcontrol.unlockchain;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.provider.Settings;
 import android.util.Log;
 
 import com.stericson.RootTools.RootTools;
@@ -15,11 +17,16 @@ import java.util.concurrent.TimeoutException;
 import javax.inject.Inject;
 
 import de.stonecs.android.lockcontrol.App;
+import de.stonecs.android.lockcontrol.dagger.qualifiers.ForApplication;
 
 /**
  * Created by deekay on 20.09.13.
  */
 public class PatternDisableLockAction implements PrioritizedLockAction {
+
+    @Inject
+    @ForApplication
+    Context context;
 
     @Inject
     public PatternDisableLockAction() {
@@ -38,51 +45,78 @@ public class PatternDisableLockAction implements PrioritizedLockAction {
     @Override
     public boolean onUnlock() {
         Log.d(App.TAG, "Disable pattern lock via root");
-        setLocksettingsDBWritable();
-        setPatternAutolock(false);
-        setLocksettingsDBSecured();
+        boolean alreadyDisabled = false;
+        try {
+            alreadyDisabled = Settings.Secure.getInt(context.getContentResolver(), Settings.Secure.LOCK_PATTERN_ENABLED) == 0;
+        } catch (Settings.SettingNotFoundException e) {
+            Log.w(App.TAG, String.format("Could not read settings value for '%s'", Settings.Secure.LOCK_PATTERN_ENABLED));
+        }
+
+        if (!alreadyDisabled) {
+            Shell rootShell = getRootShell();
+            try {
+                setLocksettingsDBWritable(rootShell);
+                setPatternAutolock(false);
+                setLocksettingsDBSecured(rootShell);
+            } finally {
+                if (rootShell != null) {
+                    try {
+                        rootShell.close();
+                    } catch (IOException e) {
+                        Log.e(App.TAG, "Caught exception while closing shell.", e);
+                    }
+                }
+            }
+        }
         return false;
     }
 
     @Override
     public boolean doLock() {
         Log.d(App.TAG, "Enable pattern lock via root");
-        setLocksettingsDBWritable();
-        setPatternAutolock(true);
-        setLocksettingsDBSecured();
+
+        boolean alreadyEnabled = false;
+        try {
+            alreadyEnabled = Settings.Secure.getInt(context.getContentResolver(), Settings.Secure.LOCK_PATTERN_ENABLED) == 1;
+        } catch (Settings.SettingNotFoundException e) {
+            Log.w(App.TAG, String.format("Could not read settings value for '%s'", Settings.Secure.LOCK_PATTERN_ENABLED));
+        }
+
+        if (!alreadyEnabled) {
+            Shell rootShell = getRootShell();
+            try {
+                setLocksettingsDBWritable(rootShell);
+                setPatternAutolock(true);
+                setLocksettingsDBSecured(rootShell);
+            } finally {
+                if (rootShell != null) {
+                    try {
+                        rootShell.close();
+                    } catch (IOException e) {
+                        Log.e(App.TAG, "Caught exception while closing shell.", e);
+                    }
+                }
+            }
+        }
         return false;
     }
 
-    private void setLocksettingsDBWritable() {
-        Shell shell = null;
+    private void setLocksettingsDBWritable(Shell shell) {
         try {
-            shell = getRootShell();
             if (shell != null) {
-                shell.add(new CommandCapture(0, new StringBuilder("chown ").append(android.os.Process.myUid()).append(" /data/system/locksettings" +
-                        ".db*\n").toString())).waitForFinish();
+                shell.add(new CommandCapture(0, new StringBuilder("chown ").append(android.os.Process.myUid()).append(" /data/system/locksettings"
+                        + ".db*\n").toString())).waitForFinish();
                 shell.add(new CommandCapture(0, "chmod 0660 /data/system/locksettings.db-*\n")).waitForFinish();
             }
         } catch (IOException e) {
             Log.e(App.TAG, "Caught exception while setting locksettings DB writable.", e);
-        } catch (TimeoutException e) {
-            Log.e(App.TAG, "Caught exception while setting locksettings DB writable.", e);
         } catch (InterruptedException e) {
             Log.e(App.TAG, "Caught exception while setting locksettings DB writable.", e);
-        } finally {
-            if (shell != null) {
-                try {
-                    shell.close();
-                } catch (IOException e) {
-                    Log.e(App.TAG, "Caught exception while closing shell.", e);
-                }
-            }
         }
     }
 
-    private void setLocksettingsDBSecured() {
-        Shell shell = null;
+    private void setLocksettingsDBSecured(Shell shell) {
         try {
-            shell = getRootShell();
             if (shell != null) {
                 shell.add(new CommandCapture(0, "chmod 0600 /data/system/locksettings.db-*\n")).waitForFinish();
                 shell.add(new CommandCapture(0, "chown 1000 /data/system/locksettings.db-*\n")).waitForFinish();
@@ -90,27 +124,21 @@ public class PatternDisableLockAction implements PrioritizedLockAction {
             }
         } catch (IOException e) {
             Log.e(App.TAG, "Caught exception while setting locksettings DB secured.", e);
-        } catch (TimeoutException e) {
-            Log.e(App.TAG, "Caught exception while setting locksettings DB secured.", e);
         } catch (InterruptedException e) {
             Log.e(App.TAG, "Caught exception while setting locksettings DB secured.", e);
-        } finally {
-            if (shell != null) {
-                try {
-                    shell.close();
-                } catch (IOException e) {
-                    Log.e(App.TAG, "Caught exception while closing shell.", e);
-                }
-            }
         }
     }
 
-    private Shell getRootShell() throws IOException, TimeoutException {
+    private Shell getRootShell() {
         Shell shell = null;
         try {
             shell = RootTools.getShell(true);
         } catch (RootDeniedException e) {
             // TODO request root via notification
+            e.printStackTrace();
+        } catch (TimeoutException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return shell;

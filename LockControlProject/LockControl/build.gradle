@@ -36,6 +36,8 @@ configurations {
 
 dependencies {
 
+    compile fileTree(dir: 'libs', include: '*.jar')
+
     apt "com.squareup.dagger:dagger-compiler:${daggerVersion}"
     compile "com.squareup.dagger:dagger:${daggerVersion}"
 	compile "com.android.support:support-v4:${ext.androidSupportVersion}"

@@ -16,4 +16,12 @@ public interface LockControlPreferences extends SharedPreferenceActions {
     Set<String> configuredNetworks();
     void configuredNetworks(Set<String> networks);
 
+    @Default(ofBoolean = true)
+    boolean rootPatternUnlock();
+    void rootPatternUnlock(boolean patternUnlock);
+
+    @Default(ofBoolean = true)
+    boolean cmMaximizeWidgets();
+    void cmMaximizeWidgets(boolean maximizeWidgets);
+
 }

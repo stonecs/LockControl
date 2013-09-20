@@ -32,9 +32,9 @@ public class UnlockReceiver extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		if ("android.intent.action.USER_PRESENT".equals(intent.getAction())) {
-			disableKeyguard(context);
+			//disableKeyguard(context);
 		} else if (REENABLE_KEYGUARD.equals(intent.getAction())) {
-			reEnableKeyguard(context);
+			//reEnableKeyguard(context);
 		}
 	}
 

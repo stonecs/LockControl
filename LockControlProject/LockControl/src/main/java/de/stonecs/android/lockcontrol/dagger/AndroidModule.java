@@ -5,6 +5,7 @@ import android.app.Application;
 import android.app.KeyguardManager;
 import android.content.Context;
 import android.net.wifi.WifiManager;
+import android.os.PowerManager;
 
 import javax.inject.Singleton;
 
@@ -40,5 +41,11 @@ public class AndroidModule {
     @Singleton
     WifiManager provideWifiManager() {
         return (WifiManager) application.getSystemService(Context.WIFI_SERVICE);
+    }
+
+    @Provides
+    @Singleton
+    PowerManager providePowerManager() {
+        return (PowerManager) application.getSystemService(Context.POWER_SERVICE);
     }
 }

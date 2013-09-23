@@ -22,6 +22,7 @@ import de.stonecs.android.lockcontrol.ui.dialogs.HmsPickerActivity;
 import de.stonecs.android.lockcontrol.dagger.qualifiers.ForApplication;
 import de.stonecs.android.lockcontrol.preferences.LockControlPreferences;
 import de.stonecs.android.lockcontrol.ui.preferences.WifiMultiSelectListPreference;
+import de.stonecs.android.lockcontrol.unlockchain.CMKeyguardBugLockAction;
 import de.stonecs.android.lockcontrol.unlockchain.CompleteDisableLockAction;
 import de.stonecs.android.lockcontrol.unlockchain.MaximizeWidgetsLockAction;
 import de.stonecs.android.lockcontrol.unlockchain.PatternDisableLockAction;
@@ -55,10 +56,12 @@ public class LockControlModule {
     }
 
     @Provides
-    List<PrioritizedLockAction> provideLockActions(LockControlPreferences preferences, TimedRelockLockAction timedRelockLockAction, MaximizeWidgetsLockAction maximizeWidgetsLockAction, PatternDisableLockAction patternDisableLockAction, CompleteDisableLockAction completeDisableLockAction) {
+    List<PrioritizedLockAction> provideLockActions(LockControlPreferences preferences, TimedRelockLockAction timedRelockLockAction, MaximizeWidgetsLockAction maximizeWidgetsLockAction
+            , PatternDisableLockAction patternDisableLockAction, CompleteDisableLockAction completeDisableLockAction, CMKeyguardBugLockAction cmKeyguardBugLockAction) {
         ArrayList<PrioritizedLockAction> prioritizedLockActions = new ArrayList<PrioritizedLockAction>();
 
         prioritizedLockActions.add(timedRelockLockAction);
+        prioritizedLockActions.add(cmKeyguardBugLockAction);
 
         if (preferences.useCompleteDisable()) {
             prioritizedLockActions.add(completeDisableLockAction);

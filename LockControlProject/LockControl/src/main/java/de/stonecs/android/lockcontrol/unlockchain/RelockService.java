@@ -75,7 +75,9 @@ public class RelockService extends Service {
                 alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis() + timeoutMillis, reLockPendingIntent);
             } else {
                 Log.d(App.TAG, "executing re-lock");
+                unregisterReceiver(receiver);
                 chain.doLock();
+
             }
         }
     }

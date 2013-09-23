@@ -1,0 +1,13 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <CheckBoxPreference
+        android:key="ignoreTimeoutOnWifi"
+        android:title="@string/ignore_timeout_on_wifi_title"
+        android:summary="@string/ignore_timeout_on_wifi_summary" />
+
+    <de.stonecs.android.lockcontrol.ui.preferences.WifiMultiSelectListPreference
+        android:key="configuredNetworks"
+        android:title="@string/disable_network_title"
+        android:summary="@string/disable_network_summary"/>
+
+</PreferenceScreen>

@@ -3,10 +3,15 @@
 
     <string name="app_name">Lock Control</string>
     <string name="disable_time_span_title">Disable duration</string>
-    <string name="disable_time_span_summary">todo</string>
     <string name="pref_header_general">General</string>
     <string name="pref_header_notifications">Notifications</string>
     <string name="disable_network_summary">Disable the lock screen when connected to one of those networks.</string>
-    <string name="disable_network_title">Wireless networks</string>
+    <string name="disable_network_title">Selected networks</string>
+    <string name="use_complete_disable_title">Disable keyguard</string>
+    <string name="use_complete_disable_summary">Completely disable the keyguard.</string>
+    <string name="ignore_timeout_on_wifi_title">Ignore timeout duration</string>
+    <string name="ignore_timeout_on_wifi_summary">When connected to a selected network permanently disable the keyguard.</string>
+    <string name="pref_header_wifi">Wireless networks</string>
+    <string name="wifi_disabled_information">Please enable wifi first.</string>
 
 </resources>

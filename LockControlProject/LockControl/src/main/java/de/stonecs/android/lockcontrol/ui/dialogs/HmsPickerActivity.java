@@ -14,6 +14,7 @@ import de.stonecs.android.lockcontrol.App;
 import de.stonecs.android.lockcontrol.R;
 import de.stonecs.android.lockcontrol.preferences.LockControlPreferences;
 import de.stonecs.android.lockcontrol.ui.dialogs.HmsPickerFragment;
+import de.stonecs.android.lockcontrol.util.TimeunitConversionUtil;
 
 /**
  * Created by Daniel on 19.09.13.
@@ -21,8 +22,6 @@ import de.stonecs.android.lockcontrol.ui.dialogs.HmsPickerFragment;
 public class HmsPickerActivity extends FragmentActivity implements HmsPickerFragment.HmsPickedHandler {
 
     private static final String FRAGMENT_TAG = "picker_fragment";
-    private static final int HOURS_TO_SECONDS = 3600;
-    private static final int MINUTES_TO_SECONDS = 60;
 
     @Inject
     protected LockControlPreferences preferences;
@@ -50,7 +49,7 @@ public class HmsPickerActivity extends FragmentActivity implements HmsPickerFrag
     @Override
     public void onHmsPicked(int reference, int hours, int minutes, int seconds) {
         Log.d("handler", "received selection");
-        preferences.disableDuration((hours * HOURS_TO_SECONDS) + (minutes * MINUTES_TO_SECONDS) + seconds);
+        preferences.disableDuration(TimeunitConversionUtil.getSecondsFor(hours, minutes, seconds));
         finish();
     }
 

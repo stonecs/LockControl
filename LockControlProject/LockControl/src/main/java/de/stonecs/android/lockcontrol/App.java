@@ -5,6 +5,7 @@ import javax.inject.Inject;
 import android.app.Application;
 import android.app.KeyguardManager;
 import dagger.ObjectGraph;
+import de.stonecs.android.lockcontrol.dagger.AndroidModule;
 import de.stonecs.android.lockcontrol.dagger.LockControlModule;
 import de.stonecs.android.lockcontrol.preferences.LockControlPreferences;
 
@@ -28,7 +29,7 @@ public class App extends Application {
 	public void onCreate() {
 		super.onCreate();
 		instance = this;
-		objectGraph = ObjectGraph.create(new LockControlModule(this));
+		objectGraph = ObjectGraph.create(new LockControlModule(this), new AndroidModule(this));
 		inject(this);
 		initPrefs();
 	}

@@ -3,12 +3,11 @@
     <de.stonecs.android.lockcontrol.ui.preferences.TimeSelectionPreference
         android:key="disableDuration"
         android:title="@string/disable_time_span_title"
-        android:summary="@string/disable_time_span_summary"
         android:persistent="false"/>
 
-    <de.stonecs.android.lockcontrol.ui.preferences.WifiMultiSelectListPreference
-        android:key="configuredNetworks"
-        android:title="@string/disable_network_title"
-        android:summary="@string/disable_network_summary"/>
+    <CheckBoxPreference
+        android:key="useCompleteDisable"
+        android:title="@string/use_complete_disable_title"
+        android:summary="@string/use_complete_disable_summary" />
 
 </PreferenceScreen>

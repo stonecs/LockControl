@@ -7,6 +7,12 @@
     <string name="pref_header_general">Allgemein</string>
     <string name="pref_header_notifications">Notifications</string>
     <string name="disable_network_summary">Bildschirmsperre deaktivieren, wenn Verbindung mit einem der Netzwerke hergestellt wurde.</string>
-    <string name="disable_network_title">Drahtlose Netzwerke</string>
+    <string name="disable_network_title">Gewählte Netzwerke</string>
+    <string name="use_complete_disable_title">Lockscreen deaktivieren</string>
+    <string name="use_complete_disable_summary">Lockscreen vollständig deaktivieren.</string>
+    <string name="ignore_timeout_on_wifi_title">Deaktivierungsdauer ignorieren</string>
+    <string name="ignore_timeout_on_wifi_summary">Bei Verbindung mit einem gewählten Netzwerk den Lockscreen dauerhaft deaktivieren.</string>
+    <string name="pref_header_wifi">Drahtlose Netzwerke</string>
+    <string name="wifi_disabled_information">Bitte aktivieren Sie Wlan</string>
 
 </resources>

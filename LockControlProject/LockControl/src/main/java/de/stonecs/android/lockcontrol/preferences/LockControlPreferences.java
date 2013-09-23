@@ -9,12 +9,17 @@ import de.devland.esperandro.annotations.SharedPreferences;
 @SharedPreferences
 public interface LockControlPreferences extends SharedPreferenceActions {
 
-	@Default(ofInt = 30)
-	int disableDuration();
-	void disableDuration(int duration);
+    /* general */
 
-    Set<String> configuredNetworks();
-    void configuredNetworks(Set<String> networks);
+    @Default(ofInt = 30)
+    int disableDuration();
+    void disableDuration(int duration);
+
+    @Default(ofBoolean = false)
+    boolean useCompleteDisable();
+    void useCompleteDisable(boolean useCompleteDisable);
+
+    /* root / cm */
 
     @Default(ofBoolean = true)
     boolean rootPatternUnlock();
@@ -24,4 +29,12 @@ public interface LockControlPreferences extends SharedPreferenceActions {
     boolean cmMaximizeWidgets();
     void cmMaximizeWidgets(boolean maximizeWidgets);
 
+    /* wifi */
+
+    @Default(ofBoolean = false)
+    boolean ignoreTimeoutOnWifi();
+    void ignoreTimeoutOnWifi(boolean ignoreTimeoutOnWifi);
+
+    Set<String> configuredNetworks();
+    void configuredNetworks(Set<String> networks);
 }

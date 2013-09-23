@@ -5,7 +5,11 @@ import android.util.Log;
 
 import com.doomonafireball.betterpickers.hmspicker.HmsPickerBuilder;
 import com.doomonafireball.betterpickers.hmspicker.HmsPickerDialogFragment;
+
+import javax.inject.Inject;
+
 import de.stonecs.android.lockcontrol.R;
+import de.stonecs.android.lockcontrol.preferences.LockControlPreferences;
 
 /**
  * Created by Daniel on 19.09.13.

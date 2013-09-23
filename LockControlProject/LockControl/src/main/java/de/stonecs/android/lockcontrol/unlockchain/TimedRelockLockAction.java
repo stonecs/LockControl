@@ -19,7 +19,7 @@ import de.stonecs.android.lockcontrol.preferences.LockControlPreferences;
  */
 public class TimedRelockLockAction implements PrioritizedLockAction {
 
-    private static final int RELOCK_KEYGUARD_REQUEST = 1;
+
 
     @Inject
     @ForApplication
@@ -28,8 +28,7 @@ public class TimedRelockLockAction implements PrioritizedLockAction {
     @Inject
     LockControlPreferences preferences;
 
-    @Inject
-    AlarmManager alarmManager;
+
 
     @Inject
     public TimedRelockLockAction() {
@@ -48,13 +47,8 @@ public class TimedRelockLockAction implements PrioritizedLockAction {
     @Override
     public boolean onUnlock() {
         // TODO doesn't work, why???
-        Intent reLockIntent = new Intent(context, RelockService.class);
-        PendingIntent reLockPendingIntent = PendingIntent.getService(context, RELOCK_KEYGUARD_REQUEST, reLockIntent,
-                PendingIntent.FLAG_CANCEL_CURRENT);
-        int timeoutMillis = preferences.disableDuration() * 1000;
-        Calendar calendar = Calendar.getInstance();
-        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis() + timeoutMillis, reLockPendingIntent);
-
+        Intent intent = new Intent(context, RelockService.class);
+        context.startService(intent);
         return false;
     }
 

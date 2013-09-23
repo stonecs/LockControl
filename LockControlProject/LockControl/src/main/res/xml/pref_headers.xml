@@ -7,6 +7,10 @@
         android:title="@string/pref_header_general" />
 
     <header
+        android:fragment="de.stonecs.android.lockcontrol.LockControlSettingsActivity$WifiPreferenceFragment"
+        android:title="@string/pref_header_wifi" />
+
+    <header
         android:fragment="de.stonecs.android.lockcontrol.LockControlSettingsActivity$NotificationPreferenceFragment"
         android:title="@string/pref_header_notifications" />
 

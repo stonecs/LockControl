@@ -55,6 +55,7 @@ dependencies {
 	compile "com.android.support:support-v4:${ext.androidSupportVersion}"
     apt "de.devland.esperandro:esperandro:${ext.esperandroVersion}"
     compile "de.devland.esperandro:esperandro-api:${ext.esperandroVersion}"
+    //compile "de.devland.esperandro:esperandro-gson-addon:${ext.esperandroVersion}"
     compile "com.doomonafireball.betterpickers:android-betterpickers:${ext.betterPickersVersion}"
 }
 

@@ -1,4 +1,4 @@
-package de.stonecs.android.lockcontrol.unlockchain;
+package de.stonecs.android.lockcontrol.unlockchain.actions;
 
 import android.content.Context;
 import android.provider.Settings;
@@ -8,6 +8,7 @@ import javax.inject.Inject;
 
 import de.stonecs.android.lockcontrol.App;
 import de.stonecs.android.lockcontrol.dagger.qualifiers.ForApplication;
+import de.stonecs.android.lockcontrol.unlockchain.PrioritizedLockAction;
 
 /**
  * Created by deekay on 20.09.13.

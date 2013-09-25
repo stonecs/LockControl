@@ -4,10 +4,14 @@ import javax.inject.Inject;
 
 import android.app.Application;
 import android.app.KeyguardManager;
+import android.content.Intent;
+
 import dagger.ObjectGraph;
 import de.stonecs.android.lockcontrol.dagger.AndroidModule;
 import de.stonecs.android.lockcontrol.dagger.LockControlModule;
+import de.stonecs.android.lockcontrol.preferences.InternalPreferences;
 import de.stonecs.android.lockcontrol.preferences.LockControlPreferences;
+import de.stonecs.android.lockcontrol.receivers.WifiBroadcastReceiver;
 
 public class App extends Application {
 	public static String TAG = "de.stonecs.android.lockControl.Tag";
@@ -18,6 +22,9 @@ public class App extends Application {
 
 	@Inject
     LockControlPreferences preferences;
+
+    @Inject
+    InternalPreferences internalPreferences;
 
 	ObjectGraph objectGraph;
 
@@ -36,14 +43,31 @@ public class App extends Application {
 
 	private void initPrefs() {
 		preferences.disableDuration(preferences.disableDuration());
+        if(!internalPreferences.contains("connectedToSelectedWifi")){
+            Intent intent = new Intent(WifiBroadcastReceiver.APPLICATION_TRIGGERED_CHECK_ACTION);
+            sendBroadcast(intent);
+        }
 	}
 
-	public KeyguardManager.KeyguardLock getKeyguardLock() {
+	private KeyguardManager.KeyguardLock getKeyguardLock() {
 		if (keyguardLock == null) {
 			keyguardLock = keyguardManager.newKeyguardLock(KEYGUARD_LOCK_TAG);
 		}
 		return keyguardLock;
 	}
+
+    public void lockKeyguard(){
+        getKeyguardLock().reenableKeyguard();
+        keyguardLock = null;
+    }
+
+    public void disableKeyguard(){
+        getKeyguardLock().disableKeyguard();
+    }
+
+    public boolean isKeyguardLocked(){
+        return keyguardLock == null;
+    }
 
 	public static App getInstance() {
 		return instance;

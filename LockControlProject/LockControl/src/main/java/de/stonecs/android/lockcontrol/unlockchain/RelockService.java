@@ -13,8 +13,10 @@ import android.util.Log;
 import java.util.Calendar;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 
 import de.stonecs.android.lockcontrol.App;
+import de.stonecs.android.lockcontrol.preferences.InternalPreferences;
 import de.stonecs.android.lockcontrol.preferences.LockControlPreferences;
 
 /**
@@ -32,6 +34,9 @@ public class RelockService extends Service {
     LockControlPreferences preferences;
 
     @Inject
+    InternalPreferences internalPreferences;
+
+    @Inject
     AlarmManager alarmManager;
 
 
@@ -40,16 +45,13 @@ public class RelockService extends Service {
 
     private BroadcastReceiver screenOnReceiver;
     private IntentFilter screenOnReceiverIntentFilter;
+
     private PendingIntent reLockPendingIntent;
 
     @Override
     public void onCreate() {
         super.onCreate();
         App.inject(this);
-    }
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
         screenOffReceiver = new ScreenOffReceiver();
         screenOnReceiver = new ScreenOnReceiver();
         screenOffReceiverIntentFilter = new IntentFilter(Intent.ACTION_SCREEN_OFF);
@@ -57,6 +59,10 @@ public class RelockService extends Service {
         screenOffReceiverIntentFilter.addAction(RE_ENABLE_KEYGUARD);
         registerReceiver(screenOffReceiver, screenOffReceiverIntentFilter);
         registerReceiver(screenOnReceiver, screenOnReceiverIntentFilter);
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
         return Service.START_STICKY;
     }
 
@@ -79,20 +85,26 @@ public class RelockService extends Service {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (Intent.ACTION_SCREEN_OFF.equals(intent.getAction())) {
-                Log.d(App.TAG, "starting timer for re-lock");
-                Intent reLockIntent = new Intent(RE_ENABLE_KEYGUARD);
-                reLockPendingIntent = PendingIntent.getBroadcast(context, RELOCK_KEYGUARD_REQUEST, reLockIntent,
-                        PendingIntent.FLAG_UPDATE_CURRENT);
-                int timeoutMillis = preferences.disableDuration() * 1000;
-                Calendar calendar = Calendar.getInstance();
-                alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis() + timeoutMillis, reLockPendingIntent);
-            } else {
+                if (shouldSetTimer()) {
+                    Log.d(App.TAG, "starting timer for re-lock");
+                    Intent reLockIntent = new Intent(RE_ENABLE_KEYGUARD);
+                    reLockPendingIntent = PendingIntent.getBroadcast(context, RELOCK_KEYGUARD_REQUEST, reLockIntent,
+                            PendingIntent.FLAG_UPDATE_CURRENT);
+                    int timeoutMillis = preferences.disableDuration() * 1000;
+                    Calendar calendar = Calendar.getInstance();
+                    alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis() + timeoutMillis, reLockPendingIntent);
+                }
+            } else if (RE_ENABLE_KEYGUARD.equals(intent.getAction())) {
                 Log.d(App.TAG, "executing re-lock");
-                unregisterReceiver(screenOffReceiver);
                 chain.doLock();
-
             }
         }
+    }
+
+    private boolean shouldSetTimer() {
+        boolean shouldSetTimer = !App.getInstance().isKeyguardLocked();
+        shouldSetTimer &= !(internalPreferences.connectedToSelectedWifi() && preferences.ignoreTimeoutOnWifi());
+        return shouldSetTimer;
     }
 
     private class ScreenOnReceiver extends BroadcastReceiver {
@@ -100,8 +112,10 @@ public class RelockService extends Service {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (Intent.ACTION_SCREEN_ON.equals(intent.getAction())) {
-                Log.d(App.TAG, "removing timer for re-lock");
-                alarmManager.cancel(reLockPendingIntent);
+                if (shouldSetTimer()) {
+                    Log.d(App.TAG, "removing timer for re-lock");
+                    alarmManager.cancel(reLockPendingIntent);
+                }
             }
         }
     }

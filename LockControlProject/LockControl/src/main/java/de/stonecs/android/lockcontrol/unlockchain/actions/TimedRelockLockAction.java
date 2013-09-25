@@ -1,4 +1,4 @@
-package de.stonecs.android.lockcontrol.unlockchain;
+package de.stonecs.android.lockcontrol.unlockchain.actions;
 
 import android.app.AlarmManager;
 import android.app.IntentService;
@@ -13,6 +13,8 @@ import javax.inject.Inject;
 import de.stonecs.android.lockcontrol.App;
 import de.stonecs.android.lockcontrol.dagger.qualifiers.ForApplication;
 import de.stonecs.android.lockcontrol.preferences.LockControlPreferences;
+import de.stonecs.android.lockcontrol.unlockchain.PrioritizedLockAction;
+import de.stonecs.android.lockcontrol.unlockchain.RelockService;
 
 /**
  * Created by deekay on 20.09.13.

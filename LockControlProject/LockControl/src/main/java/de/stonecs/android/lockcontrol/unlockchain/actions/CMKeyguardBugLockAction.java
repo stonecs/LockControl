@@ -1,4 +1,4 @@
-package de.stonecs.android.lockcontrol.unlockchain;
+package de.stonecs.android.lockcontrol.unlockchain.actions;
 
 import android.app.Instrumentation;
 import android.content.Context;
@@ -25,6 +25,7 @@ import java.util.concurrent.TimeoutException;
 import javax.inject.Inject;
 
 import de.stonecs.android.lockcontrol.dagger.qualifiers.ForApplication;
+import de.stonecs.android.lockcontrol.unlockchain.PrioritizedLockAction;
 
 /**
  * Created by Daniel on 23.09.13.

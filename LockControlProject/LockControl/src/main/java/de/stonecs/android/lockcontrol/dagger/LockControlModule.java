@@ -1,12 +1,7 @@
 package de.stonecs.android.lockcontrol.dagger;
 
-import javax.inject.Singleton;
-
-import android.app.AlarmManager;
 import android.app.Application;
-import android.app.KeyguardManager;
 import android.content.Context;
-import android.net.wifi.WifiManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,13 +17,13 @@ import de.stonecs.android.lockcontrol.ui.dialogs.HmsPickerActivity;
 import de.stonecs.android.lockcontrol.dagger.qualifiers.ForApplication;
 import de.stonecs.android.lockcontrol.preferences.LockControlPreferences;
 import de.stonecs.android.lockcontrol.ui.preferences.WifiMultiSelectListPreference;
-import de.stonecs.android.lockcontrol.unlockchain.CMKeyguardBugLockAction;
-import de.stonecs.android.lockcontrol.unlockchain.CompleteDisableLockAction;
-import de.stonecs.android.lockcontrol.unlockchain.MaximizeWidgetsLockAction;
-import de.stonecs.android.lockcontrol.unlockchain.PatternDisableLockAction;
+import de.stonecs.android.lockcontrol.unlockchain.actions.CMKeyguardBugLockAction;
+import de.stonecs.android.lockcontrol.unlockchain.actions.CompleteDisableLockAction;
+import de.stonecs.android.lockcontrol.unlockchain.actions.MaximizeWidgetsLockAction;
+import de.stonecs.android.lockcontrol.unlockchain.actions.PatternDisableLockAction;
 import de.stonecs.android.lockcontrol.unlockchain.PrioritizedLockAction;
 import de.stonecs.android.lockcontrol.unlockchain.RelockService;
-import de.stonecs.android.lockcontrol.unlockchain.TimedRelockLockAction;
+import de.stonecs.android.lockcontrol.unlockchain.actions.TimedRelockLockAction;
 
 @Module(library = true, injects = {WifiBroadcastReceiver.class, UserPresentReceiver.class, RelockService.class, App.class, WifiMultiSelectListPreference.class, HmsPickerActivity.class}, includes = AndroidModule.class)
 public class LockControlModule {
@@ -63,9 +58,9 @@ public class LockControlModule {
         if(!internalPreferences.connectedToSelectedWifi() || !preferences.ignoreTimeoutOnWifi()) {
             prioritizedLockActions.add(timedRelockLockAction);
         }
-
+// todo if(cm){
         prioritizedLockActions.add(cmKeyguardBugLockAction);
-
+// }
         if (preferences.useCompleteDisable()) {
             prioritizedLockActions.add(completeDisableLockAction);
         }

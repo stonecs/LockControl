@@ -6,6 +6,7 @@ import android.app.KeyguardManager;
 import android.content.Context;
 import android.net.wifi.WifiManager;
 import android.os.PowerManager;
+import android.support.v4.content.LocalBroadcastManager;
 
 import javax.inject.Singleton;
 
@@ -47,5 +48,11 @@ public class AndroidModule {
     @Singleton
     PowerManager providePowerManager() {
         return (PowerManager) application.getSystemService(Context.POWER_SERVICE);
+    }
+
+    @Provides
+    @Singleton
+    LocalBroadcastManager provideLocalBroadcastManager() {
+        return LocalBroadcastManager.getInstance(application);
     }
 }

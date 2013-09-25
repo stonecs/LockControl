@@ -1,5 +1,9 @@
 package de.stonecs.android.lockcontrol.unlockchain;
 
+import android.content.Intent;
+import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
+
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -7,6 +11,9 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
+
+import de.stonecs.android.lockcontrol.App;
+import de.stonecs.android.lockcontrol.preferences.InternalPreferences;
 
 /**
  * Created by Daniel on 19.09.13.
@@ -17,6 +24,8 @@ public class LockActionChain implements LockAction {
     @Inject
     Provider<List<PrioritizedLockAction>> chainProvider;
 
+    @Inject
+    InternalPreferences internalPreferences;
 
     // TODO read about <? super clazz>
     private Comparator<? super PrioritizedLockAction> unlockPriorityComparator = new Comparator<PrioritizedLockAction>() {
@@ -35,6 +44,7 @@ public class LockActionChain implements LockAction {
 
     @Override
     public boolean onUnlock() {
+        Log.d(App.TAG, "onUnlock of chain called");
         List<PrioritizedLockAction> chain = chainProvider.get();
         Collections.sort(chain, unlockPriorityComparator);
         for (PrioritizedLockAction lockAction : chain) {
@@ -47,6 +57,7 @@ public class LockActionChain implements LockAction {
 
     @Override
     public boolean doLock() {
+        Log.d(App.TAG, "doLock of chain called");
         List<PrioritizedLockAction> chain = chainProvider.get();
         Collections.sort(chain, lockPriorityComparator);
         for (PrioritizedLockAction lockAction : chain) {

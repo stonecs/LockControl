@@ -63,6 +63,7 @@ public class WifiBroadcastReceiver extends BroadcastReceiver {
     public WifiBroadcastReceiver() {
         App.inject(this);
     }
+
     @Override
     public void onReceive(Context context, Intent intent) {
         this.context = context;
@@ -107,30 +108,20 @@ public class WifiBroadcastReceiver extends BroadcastReceiver {
         String ssid = stripSsid(receivedSsid).toLowerCase();
         Log.d(App.TAG, String.format("connected to wifi %s", ssid));
         Set<String> selectedNetworks = preferences.configuredNetworks();
-        if(selectedNetworks != null && selectedNetworks.contains(String.valueOf(connectionInfo.getNetworkId()))){
+        if (selectedNetworks != null && selectedNetworks.contains(String.valueOf(connectionInfo.getNetworkId()))) {
             Log.d(App.TAG, String.format("wifi %s is one of the selected wifis", ssid));
             internalPreferences.connectedToSelectedWifi(true);
             chain.onUnlock();
+        } else {
+            internalPreferences.connectedToSelectedWifi(false);
         }
 
     }
 
     private void handleWifiDisconnect() {
-        WifiInfo connectionInfo = wifi.getConnectionInfo();
-        String ssid = getSsid().toLowerCase();
-        Log.d(App.TAG, String.format("disconnected from wifi %s", ssid));
-        Set<String> selectedNetworks = preferences.configuredNetworks();
-        if(selectedNetworks != null && selectedNetworks.contains(String.valueOf(connectionInfo.getNetworkId()))){
-            Log.d(App.TAG, String.format("wifi %s is one of the selected wifis", ssid));
-            internalPreferences.connectedToSelectedWifi(false);
-            chain.doLock();
-        }
-    }
-
-    private String getSsid(){
-        WifiInfo connectionInfo = wifi.getConnectionInfo();
-        String receivedSsid = connectionInfo.getSSID();
-        return stripSsid(receivedSsid);
+        Log.d(App.TAG, String.format("disconnected from wifi"));
+        internalPreferences.connectedToSelectedWifi(false);
+        chain.doLock();
     }
 
     private void initRetryMechanism(int retryCount) {

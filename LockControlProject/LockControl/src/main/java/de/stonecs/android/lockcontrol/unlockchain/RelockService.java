@@ -102,7 +102,7 @@ public class RelockService extends Service {
     }
 
     private boolean shouldSetTimer() {
-        boolean shouldSetTimer = !App.getInstance().isKeyguardLocked();
+        boolean shouldSetTimer = preferences.rootPatternUnlock() || (preferences.useCompleteDisable() && !App.getInstance().isKeyguardLocked());
         shouldSetTimer &= !(internalPreferences.connectedToSelectedWifi() && preferences.ignoreTimeoutOnWifi());
         return shouldSetTimer;
     }

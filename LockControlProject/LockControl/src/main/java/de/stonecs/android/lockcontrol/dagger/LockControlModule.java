@@ -59,7 +59,8 @@ public class LockControlModule {
             prioritizedLockActions.add(timedRelockLockAction);
         }
 // todo if(cm){
-        prioritizedLockActions.add(cmKeyguardBugLockAction);
+        // todo atm circular on/off due to timer, fix this
+      //  prioritizedLockActions.add(cmKeyguardBugLockAction);
 // }
         if (preferences.useCompleteDisable()) {
             prioritizedLockActions.add(completeDisableLockAction);

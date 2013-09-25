@@ -16,6 +16,7 @@ import java.util.Set;
 import javax.inject.Inject;
 
 import de.stonecs.android.lockcontrol.App;
+import de.stonecs.android.lockcontrol.preferences.InternalPreferences;
 import de.stonecs.android.lockcontrol.preferences.LockControlPreferences;
 import de.stonecs.android.lockcontrol.unlockchain.LockActionChain;
 import de.stonecs.android.lockcontrol.util.PendingIntentRequestIdGenerator;
@@ -47,6 +48,9 @@ public class WifiBroadcastReceiver extends BroadcastReceiver {
 
     @Inject
     LockControlPreferences preferences;
+
+    @Inject
+    InternalPreferences internalPreferences;
 
     @Inject
     PendingIntentRequestIdGenerator requestIdGenerator;
@@ -105,7 +109,7 @@ public class WifiBroadcastReceiver extends BroadcastReceiver {
         Set<String> selectedNetworks = preferences.configuredNetworks();
         if(selectedNetworks != null && selectedNetworks.contains(String.valueOf(connectionInfo.getNetworkId()))){
             Log.d(App.TAG, String.format("wifi %s is one of the selected wifis", ssid));
-            //todo consider preferences for unlimited disabling
+            internalPreferences.connectedToSelectedWifi(true);
             chain.onUnlock();
         }
 
@@ -118,6 +122,7 @@ public class WifiBroadcastReceiver extends BroadcastReceiver {
         Set<String> selectedNetworks = preferences.configuredNetworks();
         if(selectedNetworks != null && selectedNetworks.contains(String.valueOf(connectionInfo.getNetworkId()))){
             Log.d(App.TAG, String.format("wifi %s is one of the selected wifis", ssid));
+            internalPreferences.connectedToSelectedWifi(false);
             chain.doLock();
         }
     }

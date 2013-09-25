@@ -16,6 +16,18 @@ repositories {
 }
 
 android {
+
+    signingConfigs {
+        debug {
+            storeFile file("../../keystore/debug.keystore")
+        }
+        /*release{
+            storeFile file("../../keystore/release.keystore")
+            storePassword "changeMeBeforeRelease"
+            keyAlias "changeMeBeforeRelease"
+            keyPassword "changeMeBeforeRelease"
+        }*/
+    }
     compileSdkVersion 17
     buildToolsVersion "17.0.0"
 

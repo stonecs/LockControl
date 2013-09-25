@@ -56,11 +56,14 @@ public class LockControlModule {
     }
 
     @Provides
-    List<PrioritizedLockAction> provideLockActions(LockControlPreferences preferences, TimedRelockLockAction timedRelockLockAction, MaximizeWidgetsLockAction maximizeWidgetsLockAction
+    List<PrioritizedLockAction> provideLockActions(InternalPreferences internalPreferences, LockControlPreferences preferences, TimedRelockLockAction timedRelockLockAction, MaximizeWidgetsLockAction maximizeWidgetsLockAction
             , PatternDisableLockAction patternDisableLockAction, CompleteDisableLockAction completeDisableLockAction, CMKeyguardBugLockAction cmKeyguardBugLockAction) {
         ArrayList<PrioritizedLockAction> prioritizedLockActions = new ArrayList<PrioritizedLockAction>();
 
-        prioritizedLockActions.add(timedRelockLockAction);
+        if(!internalPreferences.connectedToSelectedWifi() || !preferences.ignoreTimeoutOnWifi()) {
+            prioritizedLockActions.add(timedRelockLockAction);
+        }
+
         prioritizedLockActions.add(cmKeyguardBugLockAction);
 
         if (preferences.useCompleteDisable()) {

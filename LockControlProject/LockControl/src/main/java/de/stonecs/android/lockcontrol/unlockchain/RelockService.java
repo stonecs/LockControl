@@ -1,7 +1,6 @@
 package de.stonecs.android.lockcontrol.unlockchain;
 
 import android.app.AlarmManager;
-import android.app.IntentService;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -11,7 +10,6 @@ import android.content.IntentFilter;
 import android.os.IBinder;
 import android.util.Log;
 
-import java.security.Provider;
 import java.util.Calendar;
 
 import javax.inject.Inject;
@@ -37,8 +35,12 @@ public class RelockService extends Service {
     AlarmManager alarmManager;
 
 
-    private BroadcastReceiver receiver;
-    private IntentFilter intentFilter;
+    private BroadcastReceiver screenOffReceiver;
+    private IntentFilter screenOffReceiverIntentFilter;
+
+    private BroadcastReceiver screenOnReceiver;
+    private IntentFilter screenOnReceiverIntentFilter;
+    private PendingIntent reLockPendingIntent;
 
     @Override
     public void onCreate() {
@@ -48,10 +50,13 @@ public class RelockService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        receiver = new ScreenOffReceiver();
-        intentFilter = new IntentFilter(Intent.ACTION_SCREEN_OFF);
-        intentFilter.addAction(RE_ENABLE_KEYGUARD);
-        registerReceiver(receiver, intentFilter);
+        screenOffReceiver = new ScreenOffReceiver();
+        screenOnReceiver = new ScreenOnReceiver();
+        screenOffReceiverIntentFilter = new IntentFilter(Intent.ACTION_SCREEN_OFF);
+        screenOnReceiverIntentFilter = new IntentFilter(Intent.ACTION_SCREEN_ON);
+        screenOffReceiverIntentFilter.addAction(RE_ENABLE_KEYGUARD);
+        registerReceiver(screenOffReceiver, screenOffReceiverIntentFilter);
+        registerReceiver(screenOnReceiver, screenOnReceiverIntentFilter);
         return Service.START_STICKY;
     }
 
@@ -61,6 +66,14 @@ public class RelockService extends Service {
         return null;
     }
 
+
+    @Override
+    public void onDestroy() {
+        unregisterReceiver(screenOffReceiver);
+        unregisterReceiver(screenOnReceiver);
+        super.onDestroy();
+    }
+
     private class ScreenOffReceiver extends BroadcastReceiver {
 
         @Override
@@ -68,23 +81,28 @@ public class RelockService extends Service {
             if (Intent.ACTION_SCREEN_OFF.equals(intent.getAction())) {
                 Log.d(App.TAG, "starting timer for re-lock");
                 Intent reLockIntent = new Intent(RE_ENABLE_KEYGUARD);
-                PendingIntent reLockPendingIntent = PendingIntent.getBroadcast(context, RELOCK_KEYGUARD_REQUEST, reLockIntent,
+                reLockPendingIntent = PendingIntent.getBroadcast(context, RELOCK_KEYGUARD_REQUEST, reLockIntent,
                         PendingIntent.FLAG_UPDATE_CURRENT);
                 int timeoutMillis = preferences.disableDuration() * 1000;
                 Calendar calendar = Calendar.getInstance();
                 alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis() + timeoutMillis, reLockPendingIntent);
             } else {
                 Log.d(App.TAG, "executing re-lock");
-                unregisterReceiver(receiver);
+                unregisterReceiver(screenOffReceiver);
                 chain.doLock();
 
             }
         }
     }
 
-    @Override
-    public void onDestroy() {
-        unregisterReceiver(receiver);
-        super.onDestroy();
+    private class ScreenOnReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (Intent.ACTION_SCREEN_ON.equals(intent.getAction())) {
+                Log.d(App.TAG, "removing timer for re-lock");
+                alarmManager.cancel(reLockPendingIntent);
+            }
+        }
     }
 }

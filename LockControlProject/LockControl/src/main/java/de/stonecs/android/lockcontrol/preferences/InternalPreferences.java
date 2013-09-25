@@ -13,4 +13,8 @@ public interface InternalPreferences {
     @Default(ofInt = PendingIntentRequestIdGenerator.UNSAVED)
     int pendingIntentBaseSeed();
     void pendingIntentBaseSeed(int baseSeed);
+
+    @Default(ofBoolean = false)
+    boolean connectedToSelectedWifi();
+    void connectedToSelectedWifi(boolean connected);
 }

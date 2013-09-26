@@ -11,6 +11,7 @@ import dagger.Provides;
 import de.devland.esperandro.Esperandro;
 import de.stonecs.android.lockcontrol.App;
 import de.stonecs.android.lockcontrol.preferences.InternalPreferences;
+import de.stonecs.android.lockcontrol.receivers.DeviceAdminReceiver;
 import de.stonecs.android.lockcontrol.receivers.UserPresentReceiver;
 import de.stonecs.android.lockcontrol.receivers.WifiBroadcastReceiver;
 import de.stonecs.android.lockcontrol.ui.dialogs.HmsPickerActivity;
@@ -25,7 +26,7 @@ import de.stonecs.android.lockcontrol.unlockchain.PrioritizedLockAction;
 import de.stonecs.android.lockcontrol.unlockchain.RelockService;
 import de.stonecs.android.lockcontrol.unlockchain.actions.TimedRelockLockAction;
 
-@Module(library = true, injects = {WifiBroadcastReceiver.class, UserPresentReceiver.class, RelockService.class, App.class, WifiMultiSelectListPreference.class, HmsPickerActivity.class}, includes = AndroidModule.class)
+@Module(library = true, injects = {WifiBroadcastReceiver.class, UserPresentReceiver.class, DeviceAdminReceiver.class, RelockService.class, App.class, WifiMultiSelectListPreference.class, HmsPickerActivity.class}, includes = AndroidModule.class)
 public class LockControlModule {
 
     Context application;
@@ -60,7 +61,7 @@ public class LockControlModule {
         }
 // todo if(cm){
         // todo atm circular on/off due to timer, fix this
-      //  prioritizedLockActions.add(cmKeyguardBugLockAction);
+        prioritizedLockActions.add(cmKeyguardBugLockAction);
 // }
         if (preferences.useCompleteDisable()) {
             prioritizedLockActions.add(completeDisableLockAction);

@@ -1,51 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="de.stonecs.android.lockcontrol"
-    android:versionCode="1"
-    android:versionName="1.0">
+          package="de.stonecs.android.lockcontrol"
+          android:versionCode="1"
+          android:versionName="1.0">
 
     <uses-sdk
-        android:minSdkVersion="11"
-        android:targetSdkVersion="16" />
+            android:minSdkVersion="11"
+            android:targetSdkVersion="16"/>
 
-    <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD"/>
     <!-- used to get the known networks -->
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <!-- used to set the 'maximize widgets' state on CM -->
-    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
     <!-- used to set the 'maximize widgets' state on CM -->
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
     <application
-        android:name=".App"
-        android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name"
-        android:theme="@style/AppTheme">
+            android:name=".App"
+            android:allowBackup="true"
+            android:icon="@drawable/ic_launcher"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme">
         <activity
-            android:name="de.stonecs.android.lockcontrol.LockControlSettingsActivity"
-            android:label="@string/app_name">
+                android:name="de.stonecs.android.lockcontrol.LockControlSettingsActivity"
+                android:label="@string/app_name">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".ui.dialogs.HmsPickerActivity" />
+        <activity android:name=".ui.dialogs.HmsPickerActivity"/>
 
         <receiver android:name=".receivers.UserPresentReceiver">
             <intent-filter>
-                <action android:name="android.intent.action.USER_PRESENT" />
+                <action android:name="android.intent.action.USER_PRESENT"/>
             </intent-filter>
         </receiver>
 
         <receiver android:name=".receivers.WifiBroadcastReceiver">
             <intent-filter>
-                <action android:name="android.net.wifi.STATE_CHANGE" />
-                <action android:name="de.stonecs.android.lockcontrol.WifiBroadcastReceiver.action.applicationTriggeredCheck" />
+                <action android:name="android.net.wifi.STATE_CHANGE"/>
+                <action android:name="de.stonecs.android.lockcontrol.WifiBroadcastReceiver.action.applicationTriggeredCheck"/>
             </intent-filter>
         </receiver>
 
-        <service android:name=".unlockchain.RelockService" />
+        <receiver
+                android:name=".receivers.DeviceAdminReceiver"
+                android:permission="android.permission.BIND_DEVICE_ADMIN">
+            <meta-data
+                    android:name="android.app.device_admin"
+                    android:resource="@xml/device_admin"/>
+            <intent-filter>
+                <action android:name="android.app.action.DEVICE_ADMIN_ENABLED"/>
+            </intent-filter>
+        </receiver>
+
+        <service android:name=".unlockchain.RelockService"/>
     </application>
 
 </manifest>

@@ -19,4 +19,8 @@ public interface InternalPreferences extends SharedPreferenceActions{
     boolean connectedToSelectedWifi();
     void connectedToSelectedWifi(boolean connected);
 
+    @Default(ofBoolean = false)
+    boolean deviceAdminEnabled();
+    void deviceAdminEnabled(boolean deviceAdminEnabled);
+
 }

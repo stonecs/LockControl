@@ -3,6 +3,7 @@ package de.stonecs.android.lockcontrol.dagger;
 import android.app.AlarmManager;
 import android.app.Application;
 import android.app.KeyguardManager;
+import android.app.admin.DevicePolicyManager;
 import android.content.Context;
 import android.net.wifi.WifiManager;
 import android.os.PowerManager;
@@ -54,5 +55,11 @@ public class AndroidModule {
     @Singleton
     LocalBroadcastManager provideLocalBroadcastManager() {
         return LocalBroadcastManager.getInstance(application);
+    }
+
+    @Provides
+    @Singleton
+    DevicePolicyManager provideDevicePolicyManager() {
+        return (DevicePolicyManager) application.getSystemService(Context.DEVICE_POLICY_SERVICE);
     }
 }

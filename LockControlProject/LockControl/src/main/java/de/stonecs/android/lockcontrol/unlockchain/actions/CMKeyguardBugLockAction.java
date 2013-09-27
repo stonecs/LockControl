@@ -48,7 +48,7 @@ public class CMKeyguardBugLockAction implements PrioritizedLockAction {
     private Context context;
 
     @Inject
-    public CMKeyguardBugLockAction(@ForApplication Context context){
+    public CMKeyguardBugLockAction(@ForApplication Context context) {
         this.context = context;
     }
 
@@ -69,41 +69,42 @@ public class CMKeyguardBugLockAction implements PrioritizedLockAction {
 
     @Override
     public boolean doLock() {
-        Log.d(App.TAG, "Preventing Lockscreen-not-responding Bug");
-        PowerManager.WakeLock screenLock = powerManager.newWakeLock(
-                PowerManager.SCREEN_DIM_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "TAG");
-        screenLock.acquire();
-        screenLock.release();
+        if (!powerManager.isScreenOn()) {
+            Log.d(App.TAG, "Preventing Lockscreen-not-responding Bug");
+            PowerManager.WakeLock screenLock = powerManager.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP,
+                    "ScreenOnWakeLock");
+            screenLock.acquire();
+            screenLock.release();
 
-        if (internalPreferences.deviceAdminEnabled()) {
-            devicePolicyManager.lockNow();
-        } else {
-            // TODO notification
-            Log.d(App.TAG, "Device Admin not enabled");
+            if (internalPreferences.deviceAdminEnabled()) {
+                devicePolicyManager.lockNow();
+            } else {
+                // TODO notification
+                Log.d(App.TAG, "Device Admin not enabled");
+            }
         }
-
-    //    try {
-     //       int screenOffTimeout = Settings.System.getInt(context.getContentResolver(), Settings.System.SCREEN_OFF_TIMEOUT);
-            //Settings.System.putInt(context.getContentResolver(), Settings.System.SCREEN_OFF_TIMEOUT, 0);
-          // Thread.sleep(1000L);
-          //  Settings.System.putInt(context.getContentResolver(), Settings.System.SCREEN_OFF_TIMEOUT, screenOffTimeout);
-      //  } catch (Settings.SettingNotFoundException unhandled) {
-      //  } catch (InterruptedException unhandled) {
-     //   }
-//       KeyEvent keyEvent = new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_POWER);
-//        try {
-//            Shell shell = RootTools.getShell(true);
-//            shell.add(new CommandCapture(0, "input keyevent 26")).waitForFinish();
-//            shell.close();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        } catch (TimeoutException e) {
-//            e.printStackTrace();
-//        } catch (RootDeniedException e) {
-//            e.printStackTrace();
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
+        //    try {
+        //       int screenOffTimeout = Settings.System.getInt(context.getContentResolver(), Settings.System.SCREEN_OFF_TIMEOUT);
+        //Settings.System.putInt(context.getContentResolver(), Settings.System.SCREEN_OFF_TIMEOUT, 0);
+        // Thread.sleep(1000L);
+        //  Settings.System.putInt(context.getContentResolver(), Settings.System.SCREEN_OFF_TIMEOUT, screenOffTimeout);
+        //  } catch (Settings.SettingNotFoundException unhandled) {
+        //  } catch (InterruptedException unhandled) {
+        //   }
+        //       KeyEvent keyEvent = new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_POWER);
+        //        try {
+        //            Shell shell = RootTools.getShell(true);
+        //            shell.add(new CommandCapture(0, "input keyevent 26")).waitForFinish();
+        //            shell.close();
+        //        } catch (IOException e) {
+        //            e.printStackTrace();
+        //        } catch (TimeoutException e) {
+        //            e.printStackTrace();
+        //        } catch (RootDeniedException e) {
+        //            e.printStackTrace();
+        //        } catch (InterruptedException e) {
+        //            e.printStackTrace();
+        //        }
 
         return false;
     }

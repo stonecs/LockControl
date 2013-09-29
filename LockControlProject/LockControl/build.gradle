@@ -37,8 +37,8 @@ android {
     }
 }
 
-ext.daggerVersion = '1.0.1';
-ext.esperandroVersion = '0.13'
+ext.daggerVersion = '1.1.0';
+ext.esperandroVersion = '1.0'
 ext.androidSupportVersion ='13.0.0'
 ext.betterPickersVersion = '1.3.1'
 

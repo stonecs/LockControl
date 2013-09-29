@@ -12,6 +12,7 @@ import javax.inject.Inject;
 
 import de.stonecs.android.lockcontrol.App;
 import de.stonecs.android.lockcontrol.dagger.qualifiers.ForApplication;
+import de.stonecs.android.lockcontrol.preferences.InternalPreferences;
 import de.stonecs.android.lockcontrol.preferences.LockControlPreferences;
 import de.stonecs.android.lockcontrol.unlockchain.PrioritizedLockAction;
 import de.stonecs.android.lockcontrol.unlockchain.RelockService;
@@ -30,10 +31,14 @@ public class TimedRelockLockAction implements PrioritizedLockAction {
     @Inject
     LockControlPreferences preferences;
 
+    @Inject
+    InternalPreferences internalPreferences;
 
+    private boolean enabled;
 
     @Inject
     public TimedRelockLockAction() {
+        this.enabled = true;
     }
 
     @Override
@@ -48,7 +53,6 @@ public class TimedRelockLockAction implements PrioritizedLockAction {
 
     @Override
     public boolean onUnlock() {
-        // TODO doesn't work, why???
         Intent intent = new Intent(context, RelockService.class);
         context.startService(intent);
         return false;
@@ -57,6 +61,26 @@ public class TimedRelockLockAction implements PrioritizedLockAction {
     @Override
     public boolean doLock() {
         return false;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    @Override
+    public boolean applies() {
+        return !internalPreferences.connectedToSelectedWifi() || !preferences.ignoreTimeoutOnWifi();
+    }
+
+    @Override
+    public boolean shouldExecute() {
+        return enabled && applies();
     }
 
 

@@ -48,8 +48,10 @@ public class LockActionChain implements LockAction {
         List<PrioritizedLockAction> chain = chainProvider.get();
         Collections.sort(chain, unlockPriorityComparator);
         for (PrioritizedLockAction lockAction : chain) {
-            if (lockAction.onUnlock()) {
-                break;
+            if (lockAction.shouldExecute()) {
+                if (lockAction.onUnlock()) {
+                    break;
+                }
             }
         }
         return false;
@@ -61,10 +63,32 @@ public class LockActionChain implements LockAction {
         List<PrioritizedLockAction> chain = chainProvider.get();
         Collections.sort(chain, lockPriorityComparator);
         for (PrioritizedLockAction lockAction : chain) {
-            if (lockAction.doLock()) {
-                break;
+            if (lockAction.shouldExecute()) {
+                if (lockAction.doLock()) {
+                    break;
+                }
             }
         }
         return false;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        // unused
+    }
+
+    @Override
+    public boolean applies() {
+        return true;
+    }
+
+    @Override
+    public boolean shouldExecute() {
+        return true;
     }
 }

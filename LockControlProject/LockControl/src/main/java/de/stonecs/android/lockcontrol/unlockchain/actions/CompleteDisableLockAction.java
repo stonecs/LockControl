@@ -6,6 +6,7 @@ import javax.inject.Inject;
 
 import de.stonecs.android.lockcontrol.App;
 import de.stonecs.android.lockcontrol.preferences.InternalPreferences;
+import de.stonecs.android.lockcontrol.preferences.LockControlPreferences;
 import de.stonecs.android.lockcontrol.unlockchain.PrioritizedLockAction;
 
 /**
@@ -17,8 +18,15 @@ public class CompleteDisableLockAction implements PrioritizedLockAction {
     InternalPreferences internalPreferences;
 
     @Inject
+    LockControlPreferences preferences;
+
+    @Inject
     public CompleteDisableLockAction() {
+        this.enabled = true;
     }
+
+    private boolean enabled;
+
 
     @Override
     public int getUnlockPriority() {
@@ -32,19 +40,35 @@ public class CompleteDisableLockAction implements PrioritizedLockAction {
 
     @Override
     public boolean onUnlock() {
-        if (App.getInstance().isKeyguardLocked()) {
-            Log.d(App.TAG, "completely disabling keyguard");
-            App.getInstance().disableKeyguard();
-        }
+        Log.d(App.TAG, "completely disabling keyguard");
+        App.getInstance().disableKeyguard();
         return true;
     }
 
     @Override
     public boolean doLock() {
-        if (App.getInstance().isKeyguardLocked()) {
-            Log.d(App.TAG, "reenabling keyguard");
-            App.getInstance().lockKeyguard();
-        }
+        Log.d(App.TAG, "reenabling keyguard");
+        App.getInstance().lockKeyguard();
         return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    @Override
+    public boolean applies() {
+        return preferences.useCompleteDisable() && App.getInstance().isKeyguardLocked();
+    }
+
+    @Override
+    public boolean shouldExecute() {
+        return enabled && applies();
     }
 }

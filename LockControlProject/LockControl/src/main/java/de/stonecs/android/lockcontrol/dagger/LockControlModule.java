@@ -56,23 +56,11 @@ public class LockControlModule {
             , PatternDisableLockAction patternDisableLockAction, CompleteDisableLockAction completeDisableLockAction, CMKeyguardBugLockAction cmKeyguardBugLockAction) {
         ArrayList<PrioritizedLockAction> prioritizedLockActions = new ArrayList<PrioritizedLockAction>();
 
-        if(!internalPreferences.connectedToSelectedWifi() || !preferences.ignoreTimeoutOnWifi()) {
-            prioritizedLockActions.add(timedRelockLockAction);
-        }
-// todo if(cm){
-        // todo atm circular on/off due to timer, fix this
+        prioritizedLockActions.add(timedRelockLockAction);
         prioritizedLockActions.add(cmKeyguardBugLockAction);
-// }
-        if (preferences.useCompleteDisable()) {
-            prioritizedLockActions.add(completeDisableLockAction);
-        }
-
-        if (preferences.rootPatternUnlock()) {
-            prioritizedLockActions.add(patternDisableLockAction);
-        }
-        if (preferences.cmMaximizeWidgets()) {
-            prioritizedLockActions.add(maximizeWidgetsLockAction);
-        }
+        prioritizedLockActions.add(completeDisableLockAction);
+        prioritizedLockActions.add(patternDisableLockAction);
+        prioritizedLockActions.add(maximizeWidgetsLockAction);
 
         return prioritizedLockActions;
     }

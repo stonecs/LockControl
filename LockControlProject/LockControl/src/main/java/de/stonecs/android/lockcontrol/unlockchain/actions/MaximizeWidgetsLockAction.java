@@ -8,6 +8,7 @@ import javax.inject.Inject;
 
 import de.stonecs.android.lockcontrol.App;
 import de.stonecs.android.lockcontrol.dagger.qualifiers.ForApplication;
+import de.stonecs.android.lockcontrol.preferences.LockControlPreferences;
 import de.stonecs.android.lockcontrol.unlockchain.PrioritizedLockAction;
 
 /**
@@ -20,7 +21,13 @@ public class MaximizeWidgetsLockAction implements PrioritizedLockAction {
     Context context;
 
     @Inject
+    LockControlPreferences preferences;
+
+    private boolean enabled;
+
+    @Inject
     public MaximizeWidgetsLockAction() {
+        this.enabled = true;
     }
 
 
@@ -44,6 +51,26 @@ public class MaximizeWidgetsLockAction implements PrioritizedLockAction {
     public boolean doLock() {
         disableMaximizeWidget();
         return false;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    @Override
+    public boolean applies() {
+        return preferences.cmMaximizeWidgets();
+    }
+
+    @Override
+    public boolean shouldExecute() {
+        return enabled && applies();
     }
 
     private void enableMaximizeWidget() {

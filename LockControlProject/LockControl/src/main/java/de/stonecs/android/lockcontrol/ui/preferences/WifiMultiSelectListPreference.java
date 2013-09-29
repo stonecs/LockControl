@@ -6,9 +6,12 @@ import android.net.wifi.WifiManager;
 import android.preference.MultiSelectListPreference;
 import android.util.AttributeSet;
 
-import java.util.Arrays;
-import java.util.HashMap;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -38,8 +41,9 @@ public class WifiMultiSelectListPreference extends MultiSelectListPreference {
         App.inject(this);
         Map<String, String> knownNetworks = getKnownNetworks();
 
-        String[] entryValues = knownNetworks.keySet().toArray(new String[0]);
-        String[] entries = knownNetworks.values().toArray(new String[0]);
+        Set<String> strings = knownNetworks.keySet();
+        String[] entryValues = strings.toArray(new String[strings.size()]);
+        String[] entries = knownNetworks.values().toArray(new String[strings.size()]);
 
         setEntries(entries);
         setEntryValues(entryValues);
@@ -52,12 +56,19 @@ public class WifiMultiSelectListPreference extends MultiSelectListPreference {
     /**
      * Returns needed information about all known wireless networks
      *
-     * @return
+     * @return a id to ssid mapping of all known networks
      */
     protected Map<String, String> getKnownNetworks() {
-        Map<String, String> knownNetworks = new HashMap<String, String>();
+        LinkedHashMap<String, String> knownNetworks = new LinkedHashMap<String, String>();
         if (wifiManager.isWifiEnabled()) {
-            for (WifiConfiguration wifiConfiguration : wifiManager.getConfiguredNetworks()) {
+            List<WifiConfiguration> configuredNetworks = wifiManager.getConfiguredNetworks();
+            Collections.sort(configuredNetworks, new Comparator<WifiConfiguration>() {
+                @Override
+                public int compare(WifiConfiguration left, WifiConfiguration right) {
+                    return left.SSID.toLowerCase().compareTo(right.SSID.toLowerCase());
+                }
+            });
+            for (WifiConfiguration wifiConfiguration : configuredNetworks) {
                 knownNetworks.put(String.valueOf(wifiConfiguration.networkId), wifiConfiguration.SSID.replaceAll("\"", ""));
             }
         }

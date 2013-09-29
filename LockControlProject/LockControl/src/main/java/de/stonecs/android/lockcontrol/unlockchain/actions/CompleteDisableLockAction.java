@@ -5,7 +5,6 @@ import android.util.Log;
 import javax.inject.Inject;
 
 import de.stonecs.android.lockcontrol.App;
-import de.stonecs.android.lockcontrol.preferences.InternalPreferences;
 import de.stonecs.android.lockcontrol.preferences.LockControlPreferences;
 import de.stonecs.android.lockcontrol.unlockchain.PrioritizedLockAction;
 
@@ -13,9 +12,6 @@ import de.stonecs.android.lockcontrol.unlockchain.PrioritizedLockAction;
  * Created by Daniel on 23.09.13.
  */
 public class CompleteDisableLockAction implements PrioritizedLockAction {
-
-    @Inject
-    InternalPreferences internalPreferences;
 
     @Inject
     LockControlPreferences preferences;
@@ -49,6 +45,7 @@ public class CompleteDisableLockAction implements PrioritizedLockAction {
     public boolean doLock() {
         Log.d(App.TAG, "reenabling keyguard");
         App.getInstance().lockKeyguard();
+        disableUnneededActions();
         return true;
     }
 
@@ -62,6 +59,10 @@ public class CompleteDisableLockAction implements PrioritizedLockAction {
         this.enabled = enabled;
     }
 
+    /* TODO currently doLock never called, due to wrong applies. We need something alternating here...
+    onUnlock ->  App.getInstance().isKeyguardLocked()
+    doLock   -> !App.getInstance().isKeyguardLocked()
+    */
     @Override
     public boolean applies() {
         return preferences.useCompleteDisable() && App.getInstance().isKeyguardLocked();
@@ -70,5 +71,16 @@ public class CompleteDisableLockAction implements PrioritizedLockAction {
     @Override
     public boolean shouldExecute() {
         return enabled && applies();
+    }
+
+    private void disableUnneededActions(){
+        PatternDisableLockAction patternDisableLockAction = App.getBean(PatternDisableLockAction.class);
+        if (patternDisableLockAction != null) {
+            patternDisableLockAction.setEnabled(false);
+        }
+        MaximizeWidgetsLockAction maximizeWidgetsLockAction = App.getBean(MaximizeWidgetsLockAction.class);
+        if(maximizeWidgetsLockAction!=null){
+            maximizeWidgetsLockAction.setEnabled(false);
+        }
     }
 }

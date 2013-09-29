@@ -5,6 +5,7 @@ import android.provider.Settings;
 import android.util.Log;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import de.stonecs.android.lockcontrol.App;
 import de.stonecs.android.lockcontrol.dagger.qualifiers.ForApplication;
@@ -14,6 +15,7 @@ import de.stonecs.android.lockcontrol.unlockchain.PrioritizedLockAction;
 /**
  * Created by deekay on 20.09.13.
  */
+@Singleton
 public class MaximizeWidgetsLockAction implements PrioritizedLockAction {
 
     @Inject

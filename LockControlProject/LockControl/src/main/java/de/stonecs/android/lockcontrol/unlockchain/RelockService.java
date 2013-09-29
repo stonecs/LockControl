@@ -13,7 +13,6 @@ import android.util.Log;
 import java.util.Calendar;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 
 import de.stonecs.android.lockcontrol.App;
 import de.stonecs.android.lockcontrol.preferences.InternalPreferences;
@@ -103,7 +102,7 @@ public class RelockService extends Service {
 
     private boolean shouldSetTimer() {
         boolean shouldSetTimer = preferences.rootPatternUnlock() || (preferences.useCompleteDisable() && !App.getInstance().isKeyguardLocked());
-        shouldSetTimer &= !(internalPreferences.connectedToSelectedWifi() && preferences.ignoreTimeoutOnWifi());
+        shouldSetTimer &= !(internalPreferences.connectedToSelectedWifi());
         return shouldSetTimer;
     }
 

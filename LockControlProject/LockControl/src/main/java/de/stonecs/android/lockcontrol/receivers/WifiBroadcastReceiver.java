@@ -71,7 +71,7 @@ public class WifiBroadcastReceiver extends BroadcastReceiver {
         if (action != null) {
             if (action.equals(WifiManager.NETWORK_STATE_CHANGED_ACTION)) {
                 NetworkInfo networkInfo = intent.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
-                if (networkInfo.getState().equals(NetworkInfo.State.CONNECTED)) {
+                if (networkInfo != null && networkInfo.getState().equals(NetworkInfo.State.CONNECTED)) {
                     handleWifiConnect(intent);
                 } else if (networkInfo.getState().equals(NetworkInfo.State.DISCONNECTED)) {
                     handleWifiDisconnect();
@@ -111,7 +111,9 @@ public class WifiBroadcastReceiver extends BroadcastReceiver {
         if (selectedNetworks != null && selectedNetworks.contains(String.valueOf(connectionInfo.getNetworkId()))) {
             Log.d(App.TAG, String.format("wifi %s is one of the selected wifis", ssid));
             internalPreferences.connectedToSelectedWifi(true);
-            chain.onUnlock();
+            if (!preferences.needsInitialUnlock()) {
+                chain.onUnlock();
+            }
         } else {
             internalPreferences.connectedToSelectedWifi(false);
         }

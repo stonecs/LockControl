@@ -1,10 +1,10 @@
 package de.stonecs.android.lockcontrol;
 
-import javax.inject.Inject;
-
 import android.app.Application;
 import android.app.KeyguardManager;
 import android.content.Intent;
+
+import javax.inject.Inject;
 
 import dagger.ObjectGraph;
 import de.stonecs.android.lockcontrol.dagger.AndroidModule;
@@ -79,5 +79,9 @@ public class App extends Application {
 
     public static void inject(Object object) {
         instance.objectGraph.inject(object);
+    }
+
+    public static<T> T getBean(Class<T> clazz) {
+        return instance.objectGraph.get(clazz);
     }
 }

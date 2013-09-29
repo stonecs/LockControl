@@ -10,9 +10,10 @@
     <string name="disable_network_title">Gewählte Netzwerke</string>
     <string name="use_complete_disable_title">Lockscreen deaktivieren</string>
     <string name="use_complete_disable_summary">Lockscreen vollständig deaktivieren.</string>
-    <string name="ignore_timeout_on_wifi_title">Deaktivierungsdauer ignorieren</string>
-    <string name="ignore_timeout_on_wifi_summary">Bei Verbindung mit einem gewählten Netzwerk den Lockscreen dauerhaft deaktivieren.</string>
     <string name="pref_header_wifi">Drahtlose Netzwerke</string>
     <string name="wifi_disabled_information">Bitte aktivieren Sie Wlan</string>
+    <string name="needs_initial_unlock_on_wifi_title">Manuelles Entsperren</string>
+    <string name="needs_initial_unlock_on_wifi_summary_on">Ein einmaliges manuelles Entsperren ist nötig, auch wenn mit einem gewählten Wlan Verbindung besteht.</string>
+    <string name="needs_initial_unlock_on_wifi_summary_off">Bei Verbindung mit einem gewählten Wlan wird sofort automatsich entsperrt.</string>
 
 </resources>

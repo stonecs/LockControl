@@ -9,9 +9,10 @@
     <string name="disable_network_title">Selected networks</string>
     <string name="use_complete_disable_title">Disable keyguard</string>
     <string name="use_complete_disable_summary">Completely disable the keyguard.</string>
-    <string name="ignore_timeout_on_wifi_title">Ignore timeout duration</string>
-    <string name="ignore_timeout_on_wifi_summary">When connected to a selected network permanently disable the keyguard.</string>
     <string name="pref_header_wifi">Wireless networks</string>
     <string name="wifi_disabled_information">Please enable wifi first.</string>
+    <string name="needs_initial_unlock_on_wifi_title">Manual unlock on wifi</string>
+    <string name="needs_initial_unlock_on_wifi_summary_on">A manual one-time unlock is needed, even if you are connected to a selected wifi.</string>
+    <string name="needs_initial_unlock_on_wifi_summary_off">When you are connected to a selected wireless network, the unlock will be done immediately.</string>
 
 </resources>

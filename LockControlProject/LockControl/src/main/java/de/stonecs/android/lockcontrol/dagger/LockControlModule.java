@@ -26,7 +26,7 @@ import de.stonecs.android.lockcontrol.unlockchain.PrioritizedLockAction;
 import de.stonecs.android.lockcontrol.unlockchain.RelockService;
 import de.stonecs.android.lockcontrol.unlockchain.actions.TimedRelockLockAction;
 
-@Module(library = true, injects = {WifiBroadcastReceiver.class, UserPresentReceiver.class, DeviceAdminReceiver.class, RelockService.class, App.class, WifiMultiSelectListPreference.class, HmsPickerActivity.class}, includes = AndroidModule.class)
+@Module(library = true, injects = {MaximizeWidgetsLockAction.class, PatternDisableLockAction.class, WifiBroadcastReceiver.class, UserPresentReceiver.class, DeviceAdminReceiver.class, RelockService.class, App.class, WifiMultiSelectListPreference.class, HmsPickerActivity.class}, includes = AndroidModule.class)
 public class LockControlModule {
 
     Context application;
@@ -52,7 +52,7 @@ public class LockControlModule {
     }
 
     @Provides
-    List<PrioritizedLockAction> provideLockActions(InternalPreferences internalPreferences, LockControlPreferences preferences, TimedRelockLockAction timedRelockLockAction, MaximizeWidgetsLockAction maximizeWidgetsLockAction
+    List<PrioritizedLockAction> provideLockActions(TimedRelockLockAction timedRelockLockAction, MaximizeWidgetsLockAction maximizeWidgetsLockAction
             , PatternDisableLockAction patternDisableLockAction, CompleteDisableLockAction completeDisableLockAction, CMKeyguardBugLockAction cmKeyguardBugLockAction) {
         ArrayList<PrioritizedLockAction> prioritizedLockActions = new ArrayList<PrioritizedLockAction>();
 

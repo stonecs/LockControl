@@ -1,19 +1,12 @@
 package de.stonecs.android.lockcontrol.unlockchain.actions;
 
-import android.app.AlarmManager;
-import android.app.IntentService;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 
-import java.util.Calendar;
-
 import javax.inject.Inject;
 
-import de.stonecs.android.lockcontrol.App;
 import de.stonecs.android.lockcontrol.dagger.qualifiers.ForApplication;
 import de.stonecs.android.lockcontrol.preferences.InternalPreferences;
-import de.stonecs.android.lockcontrol.preferences.LockControlPreferences;
 import de.stonecs.android.lockcontrol.unlockchain.PrioritizedLockAction;
 import de.stonecs.android.lockcontrol.unlockchain.RelockService;
 
@@ -27,9 +20,6 @@ public class TimedRelockLockAction implements PrioritizedLockAction {
     @Inject
     @ForApplication
     Context context;
-
-    @Inject
-    LockControlPreferences preferences;
 
     @Inject
     InternalPreferences internalPreferences;
@@ -75,7 +65,7 @@ public class TimedRelockLockAction implements PrioritizedLockAction {
 
     @Override
     public boolean applies() {
-        return !internalPreferences.connectedToSelectedWifi() || !preferences.ignoreTimeoutOnWifi();
+        return !internalPreferences.connectedToSelectedWifi();
     }
 
     @Override

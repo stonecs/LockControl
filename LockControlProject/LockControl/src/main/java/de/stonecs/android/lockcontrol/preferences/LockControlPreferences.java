@@ -32,8 +32,8 @@ public interface LockControlPreferences extends SharedPreferenceActions {
     /* wifi */
 
     @Default(ofBoolean = false)
-    boolean ignoreTimeoutOnWifi();
-    void ignoreTimeoutOnWifi(boolean ignoreTimeoutOnWifi);
+    boolean needsInitialUnlock();
+    void needsInitialUnlock(boolean needsInitialUnlock);
 
     Set<String> configuredNetworks();
     void configuredNetworks(Set<String> networks);

@@ -1,23 +1,9 @@
 package de.stonecs.android.lockcontrol;
 
-import java.util.List;
-
-import javax.inject.Inject;
-
-import de.stonecs.android.lockcontrol.preferences.LockControlPreferences;
-import de.stonecs.android.lockcontrol.receivers.WifiBroadcastReceiver;
-import de.stonecs.android.lockcontrol.ui.preferences.TimeSelectionPreference;
-import de.stonecs.android.lockcontrol.ui.preferences.WifiMultiSelectListPreference;
-import de.stonecs.android.lockcontrol.util.TimeunitConversionUtil;
-
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
-import android.net.Uri;
-import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.ListPreference;
@@ -26,8 +12,14 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
-import android.preference.RingtonePreference;
-import android.text.TextUtils;
+
+import java.util.List;
+
+import de.stonecs.android.lockcontrol.receivers.WifiBroadcastReceiver;
+import de.stonecs.android.lockcontrol.ui.preferences.WifiMultiSelectListPreference;
+import de.stonecs.android.lockcontrol.unlockchain.actions.MaximizeWidgetsLockAction;
+import de.stonecs.android.lockcontrol.unlockchain.actions.PatternDisableLockAction;
+import de.stonecs.android.lockcontrol.util.TimeunitConversionUtil;
 
 /**
  * A {@link android.preference.PreferenceActivity} that presents a set of application settings. On
@@ -61,6 +53,8 @@ public class LockControlSettingsActivity extends PreferenceActivity {
         super.onResume();
         bindPreferenceSummaryToValue(findPreference("disableDuration"));
         findPreference("configuredNetworks").setOnPreferenceChangeListener
+                (sBindPreferenceSummaryToValueListener);
+        findPreference("useCompleteDisable").setOnPreferenceChangeListener
                 (sBindPreferenceSummaryToValueListener);
 
     }
@@ -165,12 +159,22 @@ public class LockControlSettingsActivity extends PreferenceActivity {
                     String stringValue = "";
                     if (preference.getKey().equals("disableDuration")) {
                         stringValue = TimeunitConversionUtil.getStringRepresentationFor(Integer.parseInt(String.valueOf(value)));
-
                     }
-                    if(preference instanceof WifiMultiSelectListPreference){
+                    if (preference.getKey().equals("useCompleteDisable")) {
+                        boolean isSelected = (Boolean) value;
+                        PatternDisableLockAction patternDisableLockAction = App.getBean(PatternDisableLockAction.class);
+                        if (patternDisableLockAction != null) {
+                            patternDisableLockAction.setEnabled(!isSelected);
+                        }
+                        MaximizeWidgetsLockAction maximizeWidgetsLockAction = App.getBean(MaximizeWidgetsLockAction.class);
+                        if (maximizeWidgetsLockAction != null) {
+                            maximizeWidgetsLockAction.setEnabled(!isSelected);
+                        }
+                    }
+                    if (preference instanceof WifiMultiSelectListPreference) {
                         Intent intent = new Intent(WifiBroadcastReceiver.APPLICATION_TRIGGERED_CHECK_ACTION);
                         preference.getContext().sendBroadcast(intent);
-                    }else if (preference instanceof ListPreference) { // For list preferences, look up the correct display value in
+                    } else if (preference instanceof ListPreference) { // For list preferences, look up the correct display value in
                         stringValue = value.toString();
                         // the preference's 'entries' list.
                         ListPreference listPreference = (ListPreference) preference;
@@ -201,7 +205,7 @@ public class LockControlSettingsActivity extends PreferenceActivity {
         preference.setOnPreferenceChangeListener
                 (sBindPreferenceSummaryToValueListener);
 
-        String value = "";
+        String value;
         if (preference.getKey().equals("disableDuration")) {
             // TODO use typed Esperandro preferences
             value = String.valueOf(PreferenceManager.getDefaultSharedPreferences(preference.getContext()).getInt("disableDuration", 30));
@@ -230,7 +234,7 @@ public class LockControlSettingsActivity extends PreferenceActivity {
             // updated to reflect the new value, per the Android Design
             // guidelines.
             /*
-			 * bindPreferenceSummaryToValue(findPreference("example_text"));
+             * bindPreferenceSummaryToValue(findPreference("example_text"));
 			 * bindPreferenceSummaryToValue(findPreference("example_list"));
 			 */
         }
@@ -252,8 +256,8 @@ public class LockControlSettingsActivity extends PreferenceActivity {
             // to their values. When their values change, their summaries are
             // updated to reflect the new value, per the Android Design
             // guidelines.
-			/*
-			 * bindPreferenceSummaryToValue(findPreference(
+            /*
+             * bindPreferenceSummaryToValue(findPreference(
 			 * "notifications_new_message_ringtone"));
 			 */
         }

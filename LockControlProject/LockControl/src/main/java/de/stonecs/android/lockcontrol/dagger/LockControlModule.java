@@ -1,6 +1,7 @@
 package de.stonecs.android.lockcontrol.dagger;
 
 import android.app.Application;
+import android.content.ComponentName;
 import android.content.Context;
 
 import java.util.ArrayList;
@@ -10,23 +11,24 @@ import dagger.Module;
 import dagger.Provides;
 import de.devland.esperandro.Esperandro;
 import de.stonecs.android.lockcontrol.App;
+import de.stonecs.android.lockcontrol.LockControlSettingsActivity;
+import de.stonecs.android.lockcontrol.dagger.qualifiers.ForApplication;
 import de.stonecs.android.lockcontrol.preferences.InternalPreferences;
+import de.stonecs.android.lockcontrol.preferences.LockControlPreferences;
 import de.stonecs.android.lockcontrol.receivers.DeviceAdminReceiver;
 import de.stonecs.android.lockcontrol.receivers.UserPresentReceiver;
 import de.stonecs.android.lockcontrol.receivers.WifiBroadcastReceiver;
 import de.stonecs.android.lockcontrol.ui.dialogs.HmsPickerActivity;
-import de.stonecs.android.lockcontrol.dagger.qualifiers.ForApplication;
-import de.stonecs.android.lockcontrol.preferences.LockControlPreferences;
 import de.stonecs.android.lockcontrol.ui.preferences.WifiMultiSelectListPreference;
+import de.stonecs.android.lockcontrol.unlockchain.PrioritizedLockAction;
+import de.stonecs.android.lockcontrol.unlockchain.RelockService;
 import de.stonecs.android.lockcontrol.unlockchain.actions.CMKeyguardBugLockAction;
 import de.stonecs.android.lockcontrol.unlockchain.actions.CompleteDisableLockAction;
 import de.stonecs.android.lockcontrol.unlockchain.actions.MaximizeWidgetsLockAction;
 import de.stonecs.android.lockcontrol.unlockchain.actions.PatternDisableLockAction;
-import de.stonecs.android.lockcontrol.unlockchain.PrioritizedLockAction;
-import de.stonecs.android.lockcontrol.unlockchain.RelockService;
 import de.stonecs.android.lockcontrol.unlockchain.actions.TimedRelockLockAction;
 
-@Module(library = true, injects = {MaximizeWidgetsLockAction.class, PatternDisableLockAction.class, WifiBroadcastReceiver.class, UserPresentReceiver.class, DeviceAdminReceiver.class, RelockService.class, App.class, WifiMultiSelectListPreference.class, HmsPickerActivity.class}, includes = AndroidModule.class)
+@Module(library = true, injects = {LockControlSettingsActivity.class, MaximizeWidgetsLockAction.class, PatternDisableLockAction.class, WifiBroadcastReceiver.class, UserPresentReceiver.class, RelockService.class, App.class, WifiMultiSelectListPreference.class, HmsPickerActivity.class}, includes = AndroidModule.class)
 public class LockControlModule {
 
     Context application;
@@ -63,5 +65,10 @@ public class LockControlModule {
         prioritizedLockActions.add(maximizeWidgetsLockAction);
 
         return prioritizedLockActions;
+    }
+
+    @Provides
+    ComponentName provideDeviceAdminReceiverComponentName() {
+        return new ComponentName(application, DeviceAdminReceiver.class);
     }
 }

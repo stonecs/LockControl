@@ -1,6 +1,8 @@
 package de.stonecs.android.lockcontrol;
 
 import android.annotation.TargetApi;
+import android.app.admin.DevicePolicyManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -14,6 +16,8 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 import de.stonecs.android.lockcontrol.receivers.WifiBroadcastReceiver;
 import de.stonecs.android.lockcontrol.ui.preferences.WifiMultiSelectListPreference;
@@ -39,7 +43,15 @@ public class LockControlSettingsActivity extends PreferenceActivity {
      * as a master/detail two-pane view on tablets. When true, a single pane is
      * shown on tablets.
      */
+
+    private static final int RESULT_ADMIN_ENABLE = 1;
     private static final boolean ALWAYS_SIMPLE_PREFS = false;
+
+    @Inject
+    DevicePolicyManager devicePolicyManager;
+
+    @Inject
+    ComponentName adminReceiverComponentName;
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
@@ -47,6 +59,22 @@ public class LockControlSettingsActivity extends PreferenceActivity {
         setupSimplePreferencesScreen();
     }
 
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        App.inject(this);
+
+        if (!devicePolicyManager.isAdminActive(adminReceiverComponentName)) {
+            Intent intent = new Intent(DevicePolicyManager
+                    .ACTION_ADD_DEVICE_ADMIN);
+            intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN,
+                    adminReceiverComponentName);
+            intent.putExtra(DevicePolicyManager.EXTRA_ADD_EXPLANATION,
+                    "Additional text explaining why this needs to be added.");
+            startActivityForResult(intent, RESULT_ADMIN_ENABLE);
+        }
+    }
 
     @Override
     protected void onResume() {

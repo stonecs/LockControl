@@ -1,35 +1,15 @@
 package de.stonecs.android.lockcontrol.unlockchain.actions;
 
-import android.app.Instrumentation;
 import android.app.admin.DevicePolicyManager;
+import android.content.ComponentName;
 import android.content.Context;
-import android.hardware.input.InputManager;
-import android.os.IBinder;
 import android.os.PowerManager;
-import android.os.SystemClock;
-import android.provider.Settings;
 import android.util.Log;
-import android.view.InputEvent;
-import android.view.KeyEvent;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.Toast;
-
-import com.stericson.RootTools.RootTools;
-import com.stericson.RootTools.exceptions.RootDeniedException;
-import com.stericson.RootTools.execution.CommandCapture;
-import com.stericson.RootTools.execution.Shell;
-
-import java.io.IOException;
-import java.lang.reflect.Method;
-import java.util.Date;
-import java.util.concurrent.TimeoutException;
 
 import javax.inject.Inject;
 
 import de.stonecs.android.lockcontrol.App;
 import de.stonecs.android.lockcontrol.dagger.qualifiers.ForApplication;
-import de.stonecs.android.lockcontrol.preferences.InternalPreferences;
 import de.stonecs.android.lockcontrol.unlockchain.PrioritizedLockAction;
 
 /**
@@ -43,15 +23,12 @@ public class CMKeyguardBugLockAction implements PrioritizedLockAction {
     DevicePolicyManager devicePolicyManager;
 
     @Inject
-    InternalPreferences internalPreferences;
-
-    private Context context;
+    ComponentName deviceAdminComponentName;
 
     private boolean enabled;
 
     @Inject
     public CMKeyguardBugLockAction(@ForApplication Context context) {
-        this.context = context;
         this.enabled = true;
     }
 
@@ -78,7 +55,7 @@ public class CMKeyguardBugLockAction implements PrioritizedLockAction {
             screenLock.acquire();
             screenLock.release();
 
-            if (internalPreferences.deviceAdminEnabled()) {
+            if (devicePolicyManager.isAdminActive(deviceAdminComponentName)) {
                 devicePolicyManager.lockNow();
             } else {
                 // TODO notification

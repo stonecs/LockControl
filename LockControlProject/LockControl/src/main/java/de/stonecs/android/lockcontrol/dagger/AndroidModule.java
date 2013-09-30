@@ -5,6 +5,7 @@ import android.app.Application;
 import android.app.KeyguardManager;
 import android.app.admin.DevicePolicyManager;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.net.wifi.WifiManager;
 import android.os.PowerManager;
 import android.support.v4.content.LocalBroadcastManager;
@@ -61,5 +62,11 @@ public class AndroidModule {
     @Singleton
     DevicePolicyManager provideDevicePolicyManager() {
         return (DevicePolicyManager) application.getSystemService(Context.DEVICE_POLICY_SERVICE);
+    }
+
+    @Provides
+    @Singleton
+    PackageManager providePackageManager(){
+        return application.getPackageManager();
     }
 }

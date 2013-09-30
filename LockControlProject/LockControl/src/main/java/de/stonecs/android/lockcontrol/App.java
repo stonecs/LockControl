@@ -34,6 +34,9 @@ public class App extends Application {
 
     public int desiredNextLockPatternState = 1;
 
+    // TODO this should only be a quick fix, think about a better (also, non persistent) solution
+    public boolean completeDisableAppliesCompareHelper = true;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -51,6 +54,7 @@ public class App extends Application {
             Intent intent = new Intent(WifiBroadcastReceiver.APPLICATION_TRIGGERED_CHECK_ACTION);
             sendBroadcast(intent);
         }
+
     }
 
     private KeyguardManager.KeyguardLock getKeyguardLock() {

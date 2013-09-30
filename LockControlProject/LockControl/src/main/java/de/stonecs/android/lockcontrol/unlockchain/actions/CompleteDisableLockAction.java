@@ -38,6 +38,7 @@ public class CompleteDisableLockAction implements PrioritizedLockAction {
     public boolean onUnlock() {
         Log.d(App.TAG, "completely disabling keyguard");
         App.getInstance().disableKeyguard();
+        App.getInstance().completeDisableAppliesCompareHelper = false;
         return true;
     }
 
@@ -46,7 +47,8 @@ public class CompleteDisableLockAction implements PrioritizedLockAction {
         Log.d(App.TAG, "reenabling keyguard");
         App.getInstance().lockKeyguard();
         disableUnneededActions();
-        return true;
+        App.getInstance().completeDisableAppliesCompareHelper = true;
+        return false;
     }
 
     @Override
@@ -59,13 +61,9 @@ public class CompleteDisableLockAction implements PrioritizedLockAction {
         this.enabled = enabled;
     }
 
-    /* TODO currently doLock never called, due to wrong applies. We need something alternating here...
-    onUnlock ->  App.getInstance().isKeyguardLocked()
-    doLock   -> !App.getInstance().isKeyguardLocked()
-    */
     @Override
     public boolean applies() {
-        return preferences.useCompleteDisable() && App.getInstance().isKeyguardLocked();
+        return preferences.useCompleteDisable() && App.getInstance().isKeyguardLocked() == App.getInstance().completeDisableAppliesCompareHelper;
     }
 
     @Override

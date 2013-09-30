@@ -11,6 +11,10 @@ public interface LockControlPreferences extends SharedPreferenceActions {
 
     /* general */
 
+    @Default(ofBoolean = true)
+    boolean appEnabled();
+    void appEnabled(boolean enabled);
+
     @Default(ofInt = 30)
     int disableDuration();
     void disableDuration(int duration);
@@ -37,4 +41,13 @@ public interface LockControlPreferences extends SharedPreferenceActions {
 
     Set<String> configuredNetworks();
     void configuredNetworks(Set<String> networks);
+
+    /*
+    notification
+     */
+
+    @Default(ofBoolean = false)
+    boolean showDisableNotification();
+    void showDisableNotification(boolean showDisableNotification);
+
 }

@@ -14,5 +14,9 @@
     <string name="needs_initial_unlock_on_wifi_title">Manual unlock on wifi</string>
     <string name="needs_initial_unlock_on_wifi_summary_on">A manual one-time unlock is needed, even if you are connected to a selected wifi.</string>
     <string name="needs_initial_unlock_on_wifi_summary_off">When you are connected to a selected wireless network, the unlock will be done immediately.</string>
+    <string name="show_disable_notification_summary">Show a notification for disabling when lock control is active.</string>
+    <string name="show_disable_notification_title">Disable Notification</string>
+    <string name="app_enabled_title">Enable lock control</string>
+    <string name="app_enabled_summary">Enable or disable the entire application.</string>
 
 </resources>

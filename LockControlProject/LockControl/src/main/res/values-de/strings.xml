@@ -15,5 +15,9 @@
     <string name="needs_initial_unlock_on_wifi_title">Manuelles Entsperren</string>
     <string name="needs_initial_unlock_on_wifi_summary_on">Ein einmaliges manuelles Entsperren ist nötig, auch wenn mit einem gewählten Wlan Verbindung besteht.</string>
     <string name="needs_initial_unlock_on_wifi_summary_off">Bei Verbindung mit einem gewählten Wlan wird sofort automatsich entsperrt.</string>
+    <string name="show_disable_notification_summary">Show a notification for disabling when lock control is active.</string>
+    <string name="show_disable_notification_title">Disable Notification</string>
+    <string name="app_enabled_title">Lock control aktivieren</string>
+    <string name="app_enabled_summary">Die gesamte Applikation aktivieren bzw. deaktivieren.</string>
 
 </resources>

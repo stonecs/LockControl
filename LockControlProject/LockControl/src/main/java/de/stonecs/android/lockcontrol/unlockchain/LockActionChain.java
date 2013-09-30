@@ -1,7 +1,5 @@
 package de.stonecs.android.lockcontrol.unlockchain;
 
-import android.content.Intent;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import java.util.Collections;
@@ -13,7 +11,7 @@ import javax.inject.Provider;
 import javax.inject.Singleton;
 
 import de.stonecs.android.lockcontrol.App;
-import de.stonecs.android.lockcontrol.preferences.InternalPreferences;
+import de.stonecs.android.lockcontrol.preferences.LockControlPreferences;
 
 /**
  * Created by Daniel on 19.09.13.
@@ -25,7 +23,7 @@ public class LockActionChain implements LockAction {
     Provider<List<PrioritizedLockAction>> chainProvider;
 
     @Inject
-    InternalPreferences internalPreferences;
+    LockControlPreferences preferences;
 
     // TODO read about <? super clazz>
     private Comparator<? super PrioritizedLockAction> unlockPriorityComparator = new Comparator<PrioritizedLockAction>() {
@@ -44,13 +42,15 @@ public class LockActionChain implements LockAction {
 
     @Override
     public boolean onUnlock() {
-        Log.d(App.TAG, "onUnlock of chain called");
-        List<PrioritizedLockAction> chain = chainProvider.get();
-        Collections.sort(chain, unlockPriorityComparator);
-        for (PrioritizedLockAction lockAction : chain) {
-            if (lockAction.shouldExecute()) {
-                if (lockAction.onUnlock()) {
-                    break;
+        if (preferences.appEnabled()) {
+            Log.d(App.TAG, "onUnlock of chain called");
+            List<PrioritizedLockAction> chain = chainProvider.get();
+            Collections.sort(chain, unlockPriorityComparator);
+            for (PrioritizedLockAction lockAction : chain) {
+                if (lockAction.shouldExecute()) {
+                    if (lockAction.onUnlock()) {
+                        break;
+                    }
                 }
             }
         }
@@ -59,13 +59,15 @@ public class LockActionChain implements LockAction {
 
     @Override
     public boolean doLock() {
-        Log.d(App.TAG, "doLock of chain called");
-        List<PrioritizedLockAction> chain = chainProvider.get();
-        Collections.sort(chain, lockPriorityComparator);
-        for (PrioritizedLockAction lockAction : chain) {
-            if (lockAction.shouldExecute()) {
-                if (lockAction.doLock()) {
-                    break;
+        if (preferences.appEnabled()) {
+            Log.d(App.TAG, "doLock of chain called");
+            List<PrioritizedLockAction> chain = chainProvider.get();
+            Collections.sort(chain, lockPriorityComparator);
+            for (PrioritizedLockAction lockAction : chain) {
+                if (lockAction.shouldExecute()) {
+                    if (lockAction.doLock()) {
+                        break;
+                    }
                 }
             }
         }

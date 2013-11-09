@@ -15,6 +15,7 @@ import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 
+import com.crashlytics.android.Crashlytics;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -63,6 +64,8 @@ public class LockControlSettingsActivity extends PreferenceActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Crashlytics.start(this);
+
         App.inject(this);
 
         if (!devicePolicyManager.isAdminActive(adminReceiverComponentName)) {

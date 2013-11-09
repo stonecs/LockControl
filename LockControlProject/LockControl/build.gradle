@@ -1,18 +1,25 @@
 buildscript {
     repositories {
         mavenCentral()
+        maven { url 'http://download.crashlytics.com/maven' }
+
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.5.+'
+        classpath 'com.android.tools.build:gradle:0.6.3'
+        classpath 'com.crashlytics.tools.gradle:crashlytics-gradle:1.+'
+
     }
 }
 apply plugin: 'android'
+apply plugin: 'crashlytics'
 
 repositories {
     maven {
         url 'https://github.com/Goddchen/mvn-repo/raw/master/'
     }
     mavenCentral()
+    maven { url 'http://download.crashlytics.com/maven' }
+
 }
 
 android {
@@ -32,8 +39,8 @@ android {
     buildToolsVersion "17.0.0"
 
     defaultConfig {
-        minSdkVersion 9
-        targetSdkVersion 16
+        minSdkVersion 11
+        targetSdkVersion 17
     }
 }
 
@@ -57,10 +64,12 @@ dependencies {
     compile "de.devland.esperandro:esperandro-api:${ext.esperandroVersion}"
     //compile "de.devland.esperandro:esperandro-gson-addon:${ext.esperandroVersion}"
     compile "com.doomonafireball.betterpickers:android-betterpickers:${ext.betterPickersVersion}"
+    compile 'com.crashlytics.android:crashlytics:1.+'
+
 }
 
 android.applicationVariants.all { variant ->
-    aptOutput = file("${project.buildDir}/source/apt_generated/${variant.dirName}")
+    ext.aptOutput = file("${project.buildDir}/source/apt_generated/${variant.dirName}")
     println "****************************"
     println "variant: ${variant.name}"
     println "manifest:  ${variant.processResources.manifestFile}"

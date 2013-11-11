@@ -59,7 +59,7 @@
         </receiver>
 
         <service android:name=".unlockchain.RelockService"/>
-        <meta-data android:name="com.crashlytics.ApiKey" android:value="b5d536285b052ad93d3f26f942a01442a9e4e35c"/>
+        <meta-data android:name="com.crashlytics.ApiKey" android:value="59c4a0cdee1470b898c344d239e846d509939b35"/>
     </application>
 
 </manifest>
